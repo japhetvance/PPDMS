@@ -32,9 +32,31 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import profileImage from "assets/profile.jpeg";
-import axios from 'axios';
+import axios from "axios";
 
-var navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, /*{ text: "Flock Monitoring", icon: null, }, { text: "Overviews", icon: <PointOfSaleOutlined />, }, { text: "Weekly", icon: <TodayOutlined />, }, { text: "Vaccination", icon: <CalendarMonthOutlined />, }, { text: "Recap", icon: <PieChartOutlined />, },*/ ];
+// var navItems = [
+//   { text: "Dashboard", icon: <HomeOutlined /> },
+//   { text: "Egg Production", icon: null },
+//   { text: "Overview", icon: <PointOfSaleOutlined /> },
+//   { text: "Daily", icon: <TodayOutlined /> },
+//   { text: "Monthly", icon: <CalendarMonthOutlined /> },
+//   {
+//     text: "Breakdown",
+//     icon: <PieChartOutlined />,
+//   } /*{ text: "Flock Monitoring", icon: null, }, { text: "Overviews", icon: <PointOfSaleOutlined />, }, { text: "Weekly", icon: <TodayOutlined />, }, { text: "Vaccination", icon: <CalendarMonthOutlined />, }, { text: "Recap", icon: <PieChartOutlined />, },*/,
+// ];
+
+var navItems = [
+  { text: "Dashboard", icon: <HomeOutlined /> },
+  { text: "Data Visualization", icon: null },
+  { text: "Egg", icon: <PointOfSaleOutlined /> },
+  { text: "Flocks", icon: <TodayOutlined /> },
+  { text: "Sales", icon: <CalendarMonthOutlined /> },
+  {
+    text: "Comparison",
+    icon: <PieChartOutlined />,
+  },
+];
 
 const Sidebar = ({
   user,
@@ -55,27 +77,26 @@ const Sidebar = ({
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    try {
-      const result = (await axios.get('http://localhost:5001/general/user/'+JSON.parse(sessionStorage.getItem("token")).userId)).data;
-        setUserData(result);
-        setUserRole(result.role)
-      } catch (error) {
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const result = (await axios.get('http://localhost:5001/general/user/'+JSON.parse(sessionStorage.getItem("token")).userId)).data;
+  //       setUserData(result);
+  //       setUserRole(result.role)
+  //     } catch (error) {
+  //   }
+  // };
 
-  if (userRole == "superadmin") {
-    navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Management", icon: null, }, { text: "Admin", icon: <AdminPanelSettingsOutlined />, }, { text: "Transactions", icon: <ReceiptLongOutlined />, }, { text: "Insights", icon: <TrendingUpOutlined />, } ]
-  }  else if (userRole == "admin") {
-    navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Daily Report", icon: null, }, { text: "Manager", icon: <PointOfSaleOutlined />, } ]
-  } else if (userRole == "user") {
-    navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Daily Report", icon: null, }, { text: "Employee", icon: <TodayOutlined />, } ]
-  }
-  
+  // if (userRole == "superadmin") {
+  //   navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Management", icon: null, }, { text: "Admin", icon: <AdminPanelSettingsOutlined />, }, { text: "Transactions", icon: <ReceiptLongOutlined />, }, { text: "Insights", icon: <TrendingUpOutlined />, } ]
+  // }  else if (userRole == "admin") {
+  //   navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Daily Report", icon: null, }, { text: "Manager", icon: <PointOfSaleOutlined />, } ]
+  // } else if (userRole == "user") {
+  //   navItems = [ { text: "Dashboard", icon: <HomeOutlined />, }, { text: "Egg Production", icon: null, }, { text: "Overview", icon: <PointOfSaleOutlined />, }, { text: "Daily", icon: <TodayOutlined />, }, { text: "Monthly", icon: <CalendarMonthOutlined />, }, { text: "Breakdown", icon: <PieChartOutlined />, }, { text: "Daily Report", icon: null, }, { text: "Employee", icon: <TodayOutlined />, } ]
+  // }
 
   return (
     <Box component="nav">
