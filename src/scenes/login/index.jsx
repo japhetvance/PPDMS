@@ -39,7 +39,7 @@ export default function Login() {
     console.log("email: ", email);
     console.log("password: ", password);
 
-    if (email === "michael@cuejilofarms.com" && password === "admin123") {
+    if (email === "admin" && password === "admin") {
       sessionStorage.setItem("token", email);
       window.location = "/dashboard";
     } else {
