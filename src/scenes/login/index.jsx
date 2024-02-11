@@ -39,27 +39,21 @@ export default function Login() {
     console.log("email: ", email);
     console.log("password: ", password);
 
-    if (email === "admin" && password === "admin") {
+    if (email === "superadmin" && password === "superadmin") {
       sessionStorage.setItem("token", email);
       window.location = "/dashboard";
+    } else if (email === "admin" && password === "admin") {
+      sessionStorage.setItem("token", email);
+      window.location = "/dashboard";
+    } else if (email === "manager" && password === "manager") {
+      sessionStorage.setItem("token", email);
+      window.location = "/dashboard";
+    } else if (email === "employee" && password === "employee") {
+      sessionStorage.setItem("token", email);
+      window.location = "/report/egg";
     } else {
       alert("Wrong Credentials.");
     }
-
-    // try {
-    //   const response = await axios.post('http://localhost:5001/login', JSON.stringify(formData), {
-    //     headers: { 'Content-Type': 'application/json' },
-    //     withCredentials: true,
-    //   });
-    //   console.log(response.data)
-    //   if (response) {
-    //     const token = await JSON.stringify(response.data);
-    //     sessionStorage.setItem('token', token);
-    //     window.location = "/dashboard"
-    //   }
-    // } catch (error) {
-    //   console.log('Error sending form data:', error);
-    // }
   };
 
   return (

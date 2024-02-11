@@ -24,9 +24,10 @@ import {
   useTheme,
   colors,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+  const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -35,42 +36,46 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const [userData, setUserData] = useState([]);
-  const [userRole, setUserRole] = useState(null);
+  // const [userData, setUserData] = useState([]);
+  // const [userRole, setUserRole] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    if (!sessionStorage.getItem("token")) {
-      window.location = "/login"
-    }
-    try {
-      const result = (await axios.get('http://localhost:5001/general/user/'+JSON.parse(sessionStorage.getItem("token")).userId)).data;
-        setUserData(result);
-        setUserRole(result.role)
-      } catch (error) {
-    }
-  };
+  // const fetchData = async () => {
+  //   if (!sessionStorage.getItem("token")) {
+  //     window.location = "/login";
+  //   }
+  //   try {
+  //     const result = (
+  //       await axios.get(
+  //         "http://localhost:5001/general/user/" +
+  //           JSON.parse(sessionStorage.getItem("token")).userId
+  //       )
+  //     ).data;
+  //     setUserData(result);
+  //     setUserRole(result.role);
+  //   } catch (error) {}
+  // };
   const logout = () => {
-    sessionStorage.removeItem("token")
-    window.location = "/login"
-  }
+    sessionStorage.removeItem("token");
+    window.location = "/login";
+  };
 
-  var occupation;
+  // var occupation;
 
-  switch(userData.role) {
-    case "superadmin":
-      occupation = "Farm Owner";
-      break;
-    case "admin":
-      occupation = "Manager";
-      break;
-    case "user":
-      occupation = "Employee";
-      break;
-  }
+  // switch (userData.role) {
+  //   case "superadmin":
+  //     occupation = "Farm Owner";
+  //     break;
+  //   case "admin":
+  //     occupation = "Manager";
+  //     break;
+  //   case "user":
+  //     occupation = "Employee";
+  //     break;
+  // }
 
   return (
     <AppBar
@@ -99,8 +104,8 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           </FlexBetween>
         </FlexBetween>
 
-            {/* RIGHT SIDE */}
-            <FlexBetween gap="1.5rem">
+        {/* RIGHT SIDE */}
+        <FlexBetween gap="1.5rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkModeOutlined sx={{ fontSize: "25px" }} />
@@ -112,16 +117,18 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
             <SettingsOutlined sx={{ fontSize: "25px" }} />
           </IconButton>
 
-              <FlexBetween>
-                <Button onClick={handleClick} 
-                sx={{display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "center", 
-                textTransform: "none", 
-                gap:"1rem"}}
-                >
-                  
-                <Box
+          <FlexBetween>
+            <Button
+              onClick={handleClick}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                textTransform: "none",
+                gap: "1rem",
+              }}
+            >
+              <Box
                 component="img"
                 alt="profile"
                 src={profileImage}
@@ -129,34 +136,39 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 width="32px"
                 borderRadius="50%"
                 sx={{ objectFit: "cover" }}
-                />
+              />
 
-                <Box textAlign="left">
+              <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  {userData.name}
+                  {/* {userData.name} */}
+                  {token}
                 </Typography>
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {occupation}
+                  {/* {occupation} */}
+                  role
                 </Typography>
-                </Box>
-                <ArrowDropDownOutlined
-                  sx={{color: theme.palette.secondary[300], fontSize: '25px'}}
-                />
-
-                </Button>
-                <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose} anchorOrigin={{vertical: "bottom", horizontal: "center"}}>
-                  <MenuItem onClick={logout}>Log Out</MenuItem>
-                </Menu>
-              </FlexBetween>
-
+              </Box>
+              <ArrowDropDownOutlined
+                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
+              />
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={isOpen}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <MenuItem onClick={logout}>Log Out</MenuItem>
+            </Menu>
           </FlexBetween>
+        </FlexBetween>
       </Toolbar>
     </AppBar>
   );
