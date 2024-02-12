@@ -108,7 +108,7 @@ const Flocks = () => {
       <div className=" flex justify-between items-center">
         <Header
           title="FLOCKS REPORT"
-          subtitle="Record of flocks produced and rejected."
+          subtitle="Record of flocks according to their status."
         />
         <SelectFilter
           category={category}

@@ -106,7 +106,7 @@ const Comparison = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="SALES REPORT" subtitle="Record of sales." />
+      <Header title="SALES STATISTICS" subtitle="Overview of sales." />
       <Box height="75vh">
         <Box>
           <DateTabsComparison data={formattedData} />

@@ -59,7 +59,10 @@ const Sales = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <div className=" flex justify-between items-center">
-        <Header title="SALES REPORT" subtitle="Record of sales for eggs." />
+        <Header
+          title="SALES REPORT"
+          subtitle="Record of sales and profits for eggs."
+        />
         <SelectFilter
           category={category}
           setCategory={setCategory}
