@@ -18,6 +18,7 @@ import SuperadminRoute from "routes/SuperadminRoute";
 import AdminRoute from "routes/AdminRoute";
 import ManagerRoute from "routes/ManagerRoute";
 import EmployeeRoute from "routes/EmployeeRoute";
+import ProtectedRoute from "ProtectedRoute";
 
 function App() {
   const token = sessionStorage.getItem("token");
@@ -30,15 +31,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            {token === "superadmin" ? (
-              <Route path="/*" element={<SuperadminRoute />} />
-            ) : token === "admin" ? (
-              <Route path="/*" element={<AdminRoute />} />
-            ) : token === "manager" ? (
-              <Route path="/*" element={<ManagerRoute />} />
-            ) : token === "employee" ? (
-              <Route path="/*" element={<EmployeeRoute />} />
-            ) : null}
+            <Route path="/*" element={<ProtectedRoute />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </ThemeProvider>
