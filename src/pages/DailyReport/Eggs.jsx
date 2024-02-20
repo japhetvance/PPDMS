@@ -11,17 +11,32 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+//API
+import dailyService from "services/daily.service";
+
 function EggsReport() {
+  const token = sessionStorage.getItem("token");
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       date: null,
-      size: null,
-      produced: null,
+      egg_sm_produced: null,
+      egg_md_produced: null,
+      egg_lg_produced: null,
       rejected: null,
     },
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    // console.log(data);
+    try {
+      const result = await dailyService.eggReport(data, token);
+      console.log(result);
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -65,19 +80,23 @@ function EggsReport() {
             )}
           />
           <Controller
-            name="size"
+            name="egg_sm_produced"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "size is required",
+                message: "Number of eggs produced is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for Size",
               },
             }}
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
-                label="Size"
+                label="Small"
                 variant="outlined"
                 fullWidth
                 inputProps={{
@@ -98,7 +117,7 @@ function EggsReport() {
             )}
           />
           <Controller
-            name="produced"
+            name="egg_md_produced"
             control={control}
             defaultValue=""
             rules={{
@@ -114,7 +133,44 @@ function EggsReport() {
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
-                label="Produced"
+                label="Medium"
+                variant="outlined"
+                fullWidth
+                inputProps={{
+                  style: {
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "0.8rem",
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "0.9rem",
+                  },
+                }}
+                error={error !== undefined}
+                helperText={error?.message || ""}
+              />
+            )}
+          />
+          <Controller
+            name="egg_lg_produced"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: {
+                value: true,
+                message: "Number of eggs produced is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for Size",
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Large"
                 variant="outlined"
                 fullWidth
                 inputProps={{

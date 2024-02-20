@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseUrl = "http://13.211.142.147/api";
 
-const eggReportApproved = async (id, approval) => {
+const eggReportApproved = async (id, approval, token) => {
   const body = {
     id,
     approval,
@@ -23,7 +23,7 @@ const eggReportApproved = async (id, approval) => {
   }
 };
 
-const flocksReportApproved = async (id, approval) => {
+const flocksReportApproved = async (id, approval, token) => {
   const body = {
     id,
     approval,
@@ -48,7 +48,20 @@ const flocksReportApproved = async (id, approval) => {
   }
 };
 
+const fetchReportEgg = async () => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/fetch/egg/approval`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Fetching egg report failed:", error.message);
+    throw error;
+  }
+}
+
 export default {
+  fetchReportEgg,
   eggReportApproved,
   flocksReportApproved,
 };
