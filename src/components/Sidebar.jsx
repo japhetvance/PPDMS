@@ -34,6 +34,9 @@ import FlexBetween from "./FlexBetween";
 import profileImage from "assets/profile.jpeg";
 import axios from "axios";
 
+//redux
+import { useSelector } from "react-redux";
+
 const roleSpecificNavItems = {
   superadmin: [
     { link: "/dashboard", text: "Dashboard", icon: <HomeOutlined /> },
@@ -156,7 +159,7 @@ const Sidebar = ({
   setIsSidebarOpen,
   isNonMobile,
 }) => {
-  const token = sessionStorage.getItem("token");
+  const role = useSelector((state) => state.global.role);
   const [navItems, setNavItems] = useState([]);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -164,8 +167,8 @@ const Sidebar = ({
   const theme = useTheme();
 
   useEffect(() => {
-    setNavItems(roleSpecificNavItems[token]);
-  }, [token]);
+    setNavItems(roleSpecificNavItems[role]);
+  }, [role]);
 
   useEffect(() => {
     setActive(pathname.substring(1));

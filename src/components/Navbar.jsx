@@ -26,8 +26,13 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+//redux
+import { useSelector } from "react-redux";
+
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
-  const token = sessionStorage.getItem("token");
+  const username = useSelector((state) => state.global.username);
+  const role = useSelector((state) => state.global.role);
+
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -145,14 +150,14 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                   sx={{ color: theme.palette.secondary[100] }}
                 >
                   {/* {userData.name} */}
-                  {token}
+                  {username}
                 </Typography>
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
                   {/* {occupation} */}
-                  role
+                  {role}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined

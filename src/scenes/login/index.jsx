@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 import {
   Box,
   Grid,
@@ -45,38 +46,12 @@ export default function Login() {
     const username = data.username;
     const password = data.password;
 
-    console.log(username, password);
-
-    // const result = await authService.loginUser(username, password);
-    // if (result && result.success) {
-    //   Cookies.set("token", result.loginAuthenticate, { expires: 1 });
-    //   window.location.reload();
-    // } else {
-    //   toast.error("Invalid Credentials.");
-    // }
-
-    //real
-    // const result = await auth.login(username, password);
-    // if (result) {
-    //   console.log(result);
-    // } else {
-    //   console.log("error logging in.");
-    // }
-
-    if (username === "superadmin" && password === "superadmin") {
-      sessionStorage.setItem("token", username);
-      window.location = "/dashboard";
-    } else if (username === "admin" && password === "admin") {
-      sessionStorage.setItem("token", username);
-      window.location = "/dashboard";
-    } else if (username === "manager" && password === "manager") {
-      sessionStorage.setItem("token", username);
-      window.location = "/dashboard";
-    } else if (username === "employee" && password === "employee") {
-      sessionStorage.setItem("token", username);
-      window.location = "/report/egg";
+    const result = await auth.login(username, password);
+    if (result && result.token) {
+      sessionStorage.setItem("token", result.token);
+      window.location = "/";
     } else {
-      alert("Wrong Credentials.");
+      toast.error("Invalid Credentials.");
     }
   };
 

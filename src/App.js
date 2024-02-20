@@ -3,31 +3,26 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material";
 import { useMemo, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { themeSettings } from "theme";
-import axios from "axios";
 import "./App.css";
 
 import Login from "scenes/login";
-
-//Roles
-import SuperadminRoute from "routes/SuperadminRoute";
-import AdminRoute from "routes/AdminRoute";
-import ManagerRoute from "routes/ManagerRoute";
-import EmployeeRoute from "routes/EmployeeRoute";
 import ProtectedRoute from "ProtectedRoute";
 
 function App() {
-  const token = sessionStorage.getItem("token");
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
   return (
     <div className="app">
       <BrowserRouter>
+        <ToastContainer position="top-center" />
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>

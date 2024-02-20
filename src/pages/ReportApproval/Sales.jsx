@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Header from "components/Header";
 
-import ApprovalTable from "components/ApprovalTable";
+import ApprovalTable from "components/Tables/ApprovalTable";
 
 function SalesApproval() {
   const row = [
