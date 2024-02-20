@@ -34,6 +34,8 @@ import StatBox from "components/StatBox";
 import { read, utils } from "xlsx";
 import axios from "axios";
 
+import dashboardService from "services/dashboard.service";
+
 const requiredFields = [
   "ID",
   "Year",
@@ -60,120 +62,137 @@ const Dashboard = () => {
   const [confirmedImport, setConfirmedImport] = useState(false);
   const [rows, setRows] = useState([]);
 
+  //new dashboard states
+  const [eggsProduced, setEggsProduced] = useState([]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const result = (
+  //       await axios.get("http://localhost:5001/general/dashboard")
+  //     ).data;
+  //     setRows(result);
+  //     setLoading(false);
+  //     console.log("data:", result);
+  //     console.log("latestFlocks:", result && result.latestFlocks);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await dashboardService.eggProd();
+        setEggsProduced(result);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const result = (
-        await axios.get("http://localhost:5001/general/dashboard")
-      ).data;
-      setRows(result);
-      setLoading(false);
-      console.log("data:", result);
-      console.log("latestFlocks:", result && result.latestFlocks);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const readUploadFile = (e) => {
+  //   e.preventDefault();
+  //   if (e.target.files) {
+  //     const file = e.target.files[0];
+  //     setSelectedFile(file);
+  //     setConfirmedImport(false);
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const data = e.target.result;
+  //       const workbook = read(data, { type: "array" });
+  //       const sheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[sheetName];
+  //       const json = utils.sheet_to_json(worksheet);
+  //       console.log("excelRows", excelRows);
+  //       console.log("json", json);
+  //       setExcelRows(json);
+  //     };
+  //     reader.readAsArrayBuffer(file);
+  //   }
+  // };
 
-  const readUploadFile = (e) => {
-    e.preventDefault();
-    if (e.target.files) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      setConfirmedImport(false);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target.result;
-        const workbook = read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const json = utils.sheet_to_json(worksheet);
-        console.log("excelRows", excelRows);
-        console.log("json", json);
-        setExcelRows(json);
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  };
+  // const openDialog = () => {
+  //   setConfirmedImport(false);
+  //   setSelectedFile(null);
+  // };
 
-  const openDialog = () => {
-    setConfirmedImport(false);
-    setSelectedFile(null);
-  };
+  // const confirmImport = () => {
+  //   setConfirmedImport(true);
+  // };
 
-  const confirmImport = () => {
-    setConfirmedImport(true);
-  };
+  // const uploadData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const firstItemKeys = excelRows[0] && Object.keys(excelRows[0]);
+  //     const requiredValidation = firstItemKeys.length
+  //       ? !requiredFields.every((element) => firstItemKeys.includes(element))
+  //       : false;
 
-  const uploadData = async () => {
-    try {
-      setLoading(true);
-      const firstItemKeys = excelRows[0] && Object.keys(excelRows[0]);
-      const requiredValidation = firstItemKeys.length
-        ? !requiredFields.every((element) => firstItemKeys.includes(element))
-        : false;
+  //     if (requiredValidation) {
+  //       alert("Required fields: " + JSON.stringify(requiredFields));
+  //       setLoading(false);
+  //       return;
+  //     }
 
-      if (requiredValidation) {
-        alert("Required fields: " + JSON.stringify(requiredFields));
-        setLoading(false);
-        return;
-      }
+  //     const jokesResponse = (await axios.get("http://localhost:5001/api/jokes"))
+  //       .data;
+  //     const jokeList = jokesResponse || [];
 
-      const jokesResponse = (await axios.get("http://localhost:5001/api/jokes"))
-        .data;
-      const jokeList = jokesResponse || [];
+  //     const jokes = excelRows.map((obj) => ({
+  //       _id: jokeList.find((x) => x.eggId == obj["ID"])?._id,
+  //       eggId: obj["ID"] || "",
+  //       year: obj["Year"] || "",
+  //       month: obj["Month"] || "",
+  //       day: obj["Day"] || "",
+  //       eggs: obj["Eggs"] || "",
+  //       rejected: obj["Rejected"] || "",
+  //       sold: obj["Sold"] || "",
+  //       others: obj["Others"] || "",
+  //       flock: obj["Flocks"] || "",
+  //       cages: obj["Cages"] || "",
+  //     }));
 
-      const jokes = excelRows.map((obj) => ({
-        _id: jokeList.find((x) => x.eggId == obj["ID"])?._id,
-        eggId: obj["ID"] || "",
-        year: obj["Year"] || "",
-        month: obj["Month"] || "",
-        day: obj["Day"] || "",
-        eggs: obj["Eggs"] || "",
-        rejected: obj["Rejected"] || "",
-        sold: obj["Sold"] || "",
-        others: obj["Others"] || "",
-        flock: obj["Flocks"] || "",
-        cages: obj["Cages"] || "",
-      }));
+  //     const updatedJokes = jokes.filter((x) => x._id);
+  //     const newJokes = jokes.filter((x) => !x._id);
 
-      const updatedJokes = jokes.filter((x) => x._id);
-      const newJokes = jokes.filter((x) => !x._id);
+  //     const promises = [];
+  //     if (updatedJokes.length) {
+  //       promises.push(
+  //         axios.post(
+  //           "http://localhost:5001/bulk/jokes-bulk-update",
+  //           updatedJokes
+  //         )
+  //       );
+  //     }
+  //     if (newJokes.length) {
+  //       promises.push(
+  //         axios.post("http://localhost:5001/bulk/jokes-bulk-insert", newJokes)
+  //       );
+  //     }
 
-      const promises = [];
-      if (updatedJokes.length) {
-        promises.push(
-          axios.post(
-            "http://localhost:5001/bulk/jokes-bulk-update",
-            updatedJokes
-          )
-        );
-      }
-      if (newJokes.length) {
-        promises.push(
-          axios.post("http://localhost:5001/bulk/jokes-bulk-insert", newJokes)
-        );
-      }
-
-      Promise.all(promises)
-        .then(() => {
-          fetchData();
-          alert("Data updated successfully");
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.log("uploadData error: ", error);
-        });
-    } catch (error) {
-      setLoading(false);
-      console.log("uploadData error: ", error);
-    }
-  };
+  //     Promise.all(promises)
+  //       .then(() => {
+  //         fetchData();
+  //         alert("Data updated successfully");
+  //       })
+  //       .catch((error) => {
+  //         setLoading(false);
+  //         console.log("uploadData error: ", error);
+  //       });
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log("uploadData error: ", error);
+  //   }
+  // };
 
   const removeFile = () => {
     setSelectedFile(null);
@@ -212,18 +231,18 @@ const Dashboard = () => {
     },
   ];
 
-  const handleButtonClick = () => {
-    // Trigger a click on the hidden file input when the button is clicked
-    fileInputRef.current.click();
-  };
+  // const handleButtonClick = () => {
+  //   // Trigger a click on the hidden file input when the button is clicked
+  //   fileInputRef.current.click();
+  // };
 
-  const handleConfirmImport = () => {
-    uploadData(); // Call the uploadData function
-    openDialog(); // Close the dialog
-  };
+  // const handleConfirmImport = () => {
+  //   uploadData(); // Call the uploadData function
+  //   openDialog(); // Close the dialog
+  // };
 
   // Define the file name variable
-  const fileName = selectedFile ? selectedFile.name : "";
+  // const fileName = selectedFile ? selectedFile.name : "";
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -235,7 +254,7 @@ const Dashboard = () => {
 
         <label>
           <Button
-            onClick={handleButtonClick}
+            // onClick={handleButtonClick}
             sx={{
               backgroundColor: theme.palette.secondary.light,
               color: theme.palette.background.alt,
@@ -252,14 +271,14 @@ const Dashboard = () => {
             ref={fileInputRef}
             type="file"
             accept=".xlsx"
-            onChange={readUploadFile}
+            // onChange={readUploadFile}
             style={{ display: "none" }}
           />
         </label>
       </FlexBetween>
 
       {/* Confirmation Dialog */}
-      <Dialog open={selectedFile && !confirmedImport} onClose={openDialog}>
+      {/* <Dialog open={selectedFile && !confirmedImport} onClose={openDialog}>
         <DialogTitle style={{ fontSize: "24px" }}>Confirm Import</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ fontSize: "20px" }}>
@@ -283,7 +302,7 @@ const Dashboard = () => {
             Confirm
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
       <Box
         mt="20px"
@@ -298,7 +317,11 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <StatBox
           title="Weekly Eggs Produced"
-          value={rows.weekEggs || 0} //"1896"
+          // value={
+          //   eggsProduced && eggsProduced.length > 0
+          //     ? eggsProduced[eggsProduced.length - 1]
+          //     : 0
+          // } TODO: do this
           increase="+14%"
           description="Since last week"
           icon={
