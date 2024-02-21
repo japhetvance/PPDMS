@@ -4,7 +4,7 @@ const initialState = {
   userId: "",
   username: "",
   email: "",
-  role: "",
+  role: null,
 };
 
 export const globalSlice = createSlice({

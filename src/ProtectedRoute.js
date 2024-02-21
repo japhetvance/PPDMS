@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -7,6 +7,7 @@ import SuperadminRoute from "routes/SuperadminRoute";
 import AdminRoute from "routes/AdminRoute";
 import ManagerRoute from "routes/ManagerRoute";
 import EmployeeRoute from "routes/EmployeeRoute";
+import Login from "scenes/login";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ function ProtectedRoute() {
   const dispatch = useDispatch();
   const token = sessionStorage.getItem("token");
   const role = useSelector((state) => state.global.role);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkTokenAndSetUser = () => {
@@ -37,13 +39,18 @@ function ProtectedRoute() {
           console.error("Error decoding token:", error);
         }
       }
+      setLoading(false);
     };
     checkTokenAndSetUser();
-  }, []);
+  }, [token]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      {token && role && (
+      {token && role ? (
         <Routes>
           <Route
             path="/*"
@@ -62,6 +69,8 @@ function ProtectedRoute() {
             }
           />
         </Routes>
+      ) : (
+        <Navigate to="/login" />
       )}
     </>
   );
