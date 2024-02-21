@@ -31,7 +31,6 @@ function EggsReport() {
     try {
       const result = await dailyService.eggReport(data, token);
       console.log(result);
-      
     } catch (error) {
       console.error(error);
     }
@@ -86,11 +85,11 @@ function EggsReport() {
             rules={{
               required: {
                 value: true,
-                message: "Number of eggs produced is required",
+                message: "This field is required",
               },
               pattern: {
                 value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -123,11 +122,11 @@ function EggsReport() {
             rules={{
               required: {
                 value: true,
-                message: "Number of eggs produced is required",
+                message: "This field is required",
               },
               pattern: {
                 value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -160,11 +159,11 @@ function EggsReport() {
             rules={{
               required: {
                 value: true,
-                message: "Number of eggs produced is required",
+                message: "This field is required",
               },
               pattern: {
                 value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -197,11 +196,11 @@ function EggsReport() {
             rules={{
               required: {
                 value: true,
-                message: "Number of eggs rejected is required",
+                message: "This field is required",
               },
               pattern: {
                 value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (

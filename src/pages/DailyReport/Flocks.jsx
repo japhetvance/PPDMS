@@ -11,19 +11,30 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+//API
+import dailyService from "services/daily.service";
+
 function FlocksReport() {
+  const token = sessionStorage.getItem("token");
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       date: null,
-      active: null,
-      deceased: null,
-      sick: null,
+      additional_flocks: null,
+      deceased_flocks: null,
+      sick_flocks: null,
       cal: null,
-      others: null,
     },
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    // console.log(data);
+    try {
+      const result = await dailyService.flocksReport(data, token);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -67,13 +78,17 @@ function FlocksReport() {
             )}
           />
           <Controller
-            name="active"
+            name="additional_flocks"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "active is required",
+                message: "This field is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -100,13 +115,17 @@ function FlocksReport() {
             )}
           />
           <Controller
-            name="deceased"
+            name="deceased_flocks"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "deceased is required",
+                message: "This field is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -133,13 +152,17 @@ function FlocksReport() {
             )}
           />
           <Controller
-            name="sick"
+            name="sick_flocks"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "sick is required",
+                message: "This field is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -172,40 +195,17 @@ function FlocksReport() {
             rules={{
               required: {
                 value: true,
-                message: "cal is required",
+                message: "This field is required",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 label="Cal"
-                variant="outlined"
-                fullWidth
-                inputProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.8rem",
-                  },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.9rem",
-                  },
-                }}
-                error={error !== undefined}
-                helperText={error?.message || ""}
-              />
-            )}
-          />
-          <Controller
-            name="others"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Others"
                 variant="outlined"
                 fullWidth
                 inputProps={{
