@@ -10,6 +10,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { toast } from "react-toastify";
 
 //API
 import dailyService from "services/daily.service";
@@ -27,10 +28,15 @@ function EggsReport() {
     mode: "onChange",
   });
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
       const result = await dailyService.eggReport(data, token);
-      console.log(result);
+      toast.success("Successfully Added.");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
+      // console.log(result);
     } catch (error) {
       console.error(error);
     }

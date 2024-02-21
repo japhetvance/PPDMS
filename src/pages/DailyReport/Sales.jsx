@@ -10,20 +10,37 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { toast } from "react-toastify";
+
+//API
+import dailyService from "services/daily.service";
 
 function SalesReport() {
+  const token = sessionStorage.getItem("token");
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      date: null,
-      eggs: null,
-      size: null,
-      seller: null,
-      buyer: null,
-      price: null,
+      date: "",
+      buyer_name: "",
+      egg_type: "",
+      quantity: "",
     },
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    // console.log(data);
+    try {
+      const result = await dailyService.salesReport(data, token);
+      toast.success("Successfully Added.");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
+      // console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -67,23 +84,19 @@ function SalesReport() {
             )}
           />
           <Controller
-            name="eggs"
+            name="buyer_name"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "Number of eggs is required",
-              },
-              pattern: {
-                value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "This field is required",
               },
             }}
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
-                label="Number of Eggs"
+                label="Buyer's Name"
                 variant="outlined"
                 fullWidth
                 inputProps={{
@@ -104,13 +117,13 @@ function SalesReport() {
             )}
           />
           <Controller
-            name="size"
+            name="egg_type"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "size is required",
+                message: "This field is required",
               },
             }}
             render={({ field, fieldState: { error } }) => (
@@ -137,89 +150,23 @@ function SalesReport() {
             )}
           />
           <Controller
-            name="seller"
+            name="quantity"
             control={control}
             defaultValue=""
             rules={{
               required: {
                 value: true,
-                message: "seller is required",
-              },
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Seller"
-                variant="outlined"
-                fullWidth
-                inputProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.8rem",
-                  },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.9rem",
-                  },
-                }}
-                error={error !== undefined}
-                helperText={error?.message || ""}
-              />
-            )}
-          />
-          <Controller
-            name="buyer"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: {
-                value: true,
-                message: "buyer is required",
-              },
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Buyer"
-                variant="outlined"
-                fullWidth
-                inputProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.8rem",
-                  },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.9rem",
-                  },
-                }}
-                error={error !== undefined}
-                helperText={error?.message || ""}
-              />
-            )}
-          />
-          <Controller
-            name="price"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: {
-                value: true,
-                message: "price is required",
+                message: "This field is required",
               },
               pattern: {
                 value: /^[0-9]*$/,
-                message: "Please enter a valid number for Size",
+                message: "Please enter a valid number for this field",
               },
             }}
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
-                label="Price"
+                label="Quantity"
                 variant="outlined"
                 fullWidth
                 inputProps={{

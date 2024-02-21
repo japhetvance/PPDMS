@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 
 const baseUrl = "http://13.211.142.147/api";
 
@@ -24,7 +25,7 @@ const eggReport = async (formData, token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Fetching egg report failed:", error.message);
+    console.error("Uploading egg report failed:", error.message);
     throw error;
   }
 };
@@ -51,7 +52,35 @@ const flocksReport = async (formData, token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Fetching flocks report failed:", error.message);
+    console.error("Uploading flocks report failed:", error.message);
+    throw error;
+  }
+};
+
+const salesReport = async (formData, token) => {
+  const { date, buyer_name, egg_type, quantity } = formData;
+
+  // Format the date using dayjs
+  const formattedDate = dayjs(date).format("YYYY-DD-MM");
+
+  const body = {
+    date: formattedDate,
+    buyer_name,
+    egg_type,
+    quantity,
+  };
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    const response = await axios.post(`${baseUrl}/sales/report`, body, {
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Uploading sales report failed:", error.message);
     throw error;
   }
 };
@@ -59,4 +88,5 @@ const flocksReport = async (formData, token) => {
 export default {
   eggReport,
   flocksReport,
+  salesReport,
 };
