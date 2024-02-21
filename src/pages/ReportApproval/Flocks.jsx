@@ -4,54 +4,18 @@ import Header from "components/Header";
 
 import ApprovalTable from "components/Tables/ApprovalTable";
 
+import reportApprovedService from "services/reportApproved.service";
+
 function FlocksApproval() {
-  const row = [
-    {
-      id: 1,
-      date: "2024-02-13",
-      active: 150,
-      deceased: 5,
-      sick: 10,
-      cal: 20,
-      others: 8,
-    },
-    {
-      id: 2,
-      date: "2024-02-14",
-      active: 180,
-      deceased: 8,
-      sick: 15,
-      cal: 25,
-      others: 12,
-    },
-    {
-      id: 3,
-      date: "2024-02-15",
-      active: 160,
-      deceased: 7,
-      sick: 12,
-      cal: 18,
-      others: 10,
-    },
-    {
-      id: 4,
-      date: "2024-02-16",
-      active: 150,
-      deceased: 10,
-      sick: 20,
-      cal: 30,
-      others: 15,
-    },
-    {
-      id: 5,
-      date: "2024-02-17",
-      active: 170,
-      deceased: 6,
-      sick: 18,
-      cal: 22,
-      others: 14,
-    },
-  ];
+  const [row, setRow] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await reportApprovedService.fetchReportFlock();
+      setRow(result);
+    };
+    fetchData();
+  }, []);
 
   const columns = [
     { field: "id", headerName: "ID", width: 50 },
@@ -61,17 +25,17 @@ function FlocksApproval() {
       width: 150,
     },
     {
-      field: "active",
+      field: "additional_flocks",
       headerName: "Active",
       width: 150,
     },
     {
-      field: "deceased",
+      field: "deceased_flocks",
       headerName: "Deceased",
       width: 150,
     },
     {
-      field: "sick",
+      field: "sick_flocks",
       headerName: "Sick",
       width: 150,
     },
@@ -81,8 +45,13 @@ function FlocksApproval() {
       width: 150,
     },
     {
-      field: "others",
-      headerName: "Others",
+      field: "flocks_number_before",
+      headerName: "Before",
+      width: 150,
+    },
+    {
+      field: "flocks_number_after",
+      headerName: "After",
       width: 150,
     },
   ];

@@ -4,54 +4,18 @@ import Header from "components/Header";
 
 import ApprovalTable from "components/Tables/ApprovalTable";
 
+import reportApprovedService from "services/reportApproved.service";
+
 function SalesApproval() {
-  const row = [
-    {
-      id: 1,
-      date: "2024-02-13",
-      eggCount: 150,
-      size: "Medium",
-      seller: "John Doe",
-      buyer: "Alice Smith",
-      price: 2.5,
-    },
-    {
-      id: 2,
-      date: "2024-02-14",
-      eggCount: 180,
-      size: "Large",
-      seller: "Jane Smith",
-      buyer: "Bob Johnson",
-      price: 3.0,
-    },
-    {
-      id: 3,
-      date: "2024-02-15",
-      eggCount: 160,
-      size: "Small",
-      seller: "Bob Johnson",
-      buyer: "Charlie Wilson",
-      price: 2.0,
-    },
-    {
-      id: 4,
-      date: "2024-02-16",
-      eggCount: 200,
-      size: "Extra Large",
-      seller: "Alice Brown",
-      buyer: "David Jones",
-      price: 3.5,
-    },
-    {
-      id: 5,
-      date: "2024-02-17",
-      eggCount: 170,
-      size: "Medium",
-      seller: "Charlie Wilson",
-      buyer: "Emily Davis",
-      price: 2.7,
-    },
-  ];
+  const [row, setRow] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await reportApprovedService.fetchReportSales();
+      setRow(result);
+    };
+    fetchData();
+  }, []);
 
   const columns = [
     { field: "id", headerName: "ID", width: 50 },
@@ -61,22 +25,17 @@ function SalesApproval() {
       width: 150,
     },
     {
-      field: "eggCount",
-      headerName: "# of Eggs",
+      field: "quantity",
+      headerName: "Quantity",
       width: 150,
     },
     {
-      field: "size",
-      headerName: "Size",
+      field: "egg_type",
+      headerName: "Type",
       width: 150,
     },
     {
-      field: "seller",
-      headerName: "Seller",
-      width: 150,
-    },
-    {
-      field: "buyer",
+      field: "buyer_name",
       headerName: "Buyer",
       width: 150,
     },

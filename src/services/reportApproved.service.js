@@ -50,18 +50,38 @@ const flocksReportApproved = async (id, approval, token) => {
 
 const fetchReportEgg = async () => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/fetch/egg/approval`
-    );
+    const response = await axios.get(`${baseUrl}/fetch/egg/approval`);
     return response.data;
   } catch (error) {
     console.error("Fetching egg report failed:", error.message);
     throw error;
   }
-}
+};
+
+const fetchReportFlock = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/fetch/flocks/approval`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching flocks report failed:", error.message);
+    throw error;
+  }
+};
+
+const fetchReportSales = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/fetch/sales/approval`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching sales report failed:", error.message);
+    throw error;
+  }
+};
 
 export default {
-  fetchReportEgg,
   eggReportApproved,
   flocksReportApproved,
+  fetchReportEgg,
+  fetchReportFlock,
+  fetchReportSales,
 };
