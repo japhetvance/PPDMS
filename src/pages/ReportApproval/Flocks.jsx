@@ -1,13 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Header from "components/Header";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 import ApprovalTable from "components/Tables/ApprovalTable";
 
 import reportApprovedService from "services/reportApproved.service";
 
 function FlocksApproval() {
+  const token = sessionStorage.getItem("token");
   const [row, setRow] = useState([]);
+
+  const handleApprove = async (id) => {
+    try {
+      const result = await reportApprovedService.flocksReportApproved(
+        id,
+        "approved",
+        token
+      );
+
+      toast.success("Approved successfully.");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error(`Error approving report with ID ${id}:`, error.message);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      const result = await reportApprovedService.flocksReportApproved(
+        id,
+        "rejected",
+        token
+      );
+
+      toast.success("Rejected successfully.");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error(`Error approving report with ID ${id}:`, error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,37 +61,72 @@ function FlocksApproval() {
     {
       field: "date",
       headerName: "Date",
-      width: 150,
+      width: 100,
     },
     {
       field: "additional_flocks",
       headerName: "Active",
-      width: 150,
+      width: 100,
     },
     {
       field: "deceased_flocks",
       headerName: "Deceased",
-      width: 150,
+      width: 100,
     },
     {
       field: "sick_flocks",
       headerName: "Sick",
-      width: 150,
+      width: 100,
     },
     {
       field: "cal",
       headerName: "Cal",
-      width: 150,
+      width: 100,
     },
     {
       field: "flocks_number_before",
       headerName: "Before",
-      width: 150,
+      width: 100,
     },
     {
       field: "flocks_number_after",
       headerName: "After",
-      width: 150,
+      width: 100,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 100,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 100,
+      renderCell: (params) =>
+        params.row.status === "pending" ? (
+          <div className="flex gap-2">
+            <GridActionsCellItem
+              icon={<CheckIcon sx={{ color: "green" }} />}
+              label="Approve"
+              onClick={() => handleApprove(params.row.id)}
+              color="inherit"
+              sx={{
+                border: "1px solid green",
+                borderRadius: 1,
+              }}
+            />
+            <GridActionsCellItem
+              icon={<CloseIcon sx={{ color: "red" }} />}
+              label="Reject"
+              onClick={() => handleReject(params.row.id)}
+              color="inherit"
+              sx={{
+                border: "1px solid red",
+                borderRadius: 1,
+              }}
+            />
+          </div>
+        ) : null,
     },
   ];
 
