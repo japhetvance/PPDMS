@@ -1,12 +1,23 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
 
+import visualizeService from "services/visualize.service";
+
 const Eggs = () => {
   const theme = useTheme();
+
+  useEffect(() => {
+    const fetchEggVisualization = async () => {
+      const result = await visualizeService.eggVisualize();
+      console.log(result);
+    };
+    fetchEggVisualization();
+  }, []);
+
   const [category, setCategory] = React.useState("Produced");
 
   const selectOptions = ["Produced", "Rejected"];
