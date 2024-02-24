@@ -5,6 +5,10 @@ import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Header from "components/Header";
 import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,30 +21,37 @@ import dailyService from "services/daily.service";
 
 function SalesReport() {
   const token = sessionStorage.getItem("token");
+  const type = ["egg_sm", "egg_md", "egg_lg"];
+
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      date: "",
-      buyer_name: "",
-      egg_type: "",
-      quantity: "",
+      date: null,
+      buyer_name: null,
+      egg_type: null,
+      quantity: null,
     },
     mode: "onChange",
   });
+
   const onSubmit = async (data) => {
     // console.log(data);
     try {
       const result = await dailyService.salesReport(data, token);
       toast.success("Successfully Added.");
+      // console.log(result);
 
       setTimeout(() => {
         window.location.reload();
       }, 1500);
-
-      // console.log(result);
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -127,26 +138,34 @@ function SalesReport() {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Size"
-                variant="outlined"
-                fullWidth
-                inputProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.8rem",
-                  },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "0.9rem",
-                  },
-                }}
-                error={error !== undefined}
-                helperText={error?.message || ""}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                  {...field}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Type"
+                  inputProps={{
+                    style: {
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "0.8rem",
+                    },
+                  }}
+                  error={error !== undefined}
+                >
+                  {type.map((item, index) => (
+                    <MenuItem value={item} key={index}>
+                      {item === "egg_sm"
+                        ? "Small"
+                        : item === "egg_md"
+                        ? "Medium"
+                        : item === "egg_lg"
+                        ? "Large"
+                        : ""}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
           <Controller

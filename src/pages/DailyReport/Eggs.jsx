@@ -39,6 +39,10 @@ function EggsReport() {
       // console.log(result);
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 

@@ -48,6 +48,27 @@ const flocksReportApproved = async (id, approval, token) => {
   }
 };
 
+const salesReportApproved = async (id, approval, token) => {
+  const body = {
+    id,
+    approval,
+  };
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    const response = await axios.post(`${baseUrl}/egg/sales/approved`, body, {
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Updating approved sales report failed:", error.message);
+    throw error;
+  }
+};
+
 const fetchReportEgg = async () => {
   try {
     const response = await axios.get(`${baseUrl}/fetch/egg/approval`);
@@ -81,6 +102,7 @@ const fetchReportSales = async () => {
 export default {
   eggReportApproved,
   flocksReportApproved,
+  salesReportApproved,
   fetchReportEgg,
   fetchReportFlock,
   fetchReportSales,

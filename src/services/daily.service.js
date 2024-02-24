@@ -60,11 +60,8 @@ const flocksReport = async (formData, token) => {
 const salesReport = async (formData, token) => {
   const { date, buyer_name, egg_type, quantity } = formData;
 
-  // Format the date using dayjs
-  const formattedDate = dayjs(date).format("YYYY-DD-MM");
-
   const body = {
-    date: formattedDate,
+    date,
     buyer_name,
     egg_type,
     quantity,

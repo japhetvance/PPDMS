@@ -27,7 +27,11 @@ function FlocksApproval() {
         window.location.reload();
       }, 1000);
     } catch (error) {
-      console.error(`Error approving report with ID ${id}:`, error.message);
+      console.error(error);
+      toast.error(error.response.data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -44,7 +48,11 @@ function FlocksApproval() {
         window.location.reload();
       }, 1000);
     } catch (error) {
-      console.error(`Error approving report with ID ${id}:`, error.message);
+      console.error(error);
+      toast.error(error.response.data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
