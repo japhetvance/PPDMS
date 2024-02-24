@@ -5,7 +5,7 @@ const baseUrl = "http://13.211.142.147/api";
 const flockDets = async () => {
   try {
     const response = await axios.get(`${baseUrl}/dashboard/flocks/dets`);
-    return response.data;
+    return response.data.totalFlocksDets;
   } catch (error) {
     console.error("Fetching failed:", error.message);
     throw error;

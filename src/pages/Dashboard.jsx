@@ -64,6 +64,10 @@ const Dashboard = () => {
 
   //new dashboard states
   const [eggsProduced, setEggsProduced] = useState([]);
+  const [eggsProducedPercentage, setEggsProducedPercentage] = useState();
+
+  const [eggsSold, setEggsSold] = useState([]);
+  const [eggsSoldPercentage, setEggsSoldPercentage] = useState();
 
   // useEffect(() => {
   //   fetchData();
@@ -86,18 +90,88 @@ const Dashboard = () => {
   // };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchEggsProducedData = async () => {
       try {
         const result = await dashboardService.eggProd();
-        setEggsProduced(result);
+        const sortedEggsProduced = [...result].sort((a, b) => a.week - b.week);
+
+        setEggsProduced(sortedEggsProduced);
+        // console.log(sortedEggsProduced);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    const fetchEggsSoldData = async () => {
+      try {
+        const result = await dashboardService.eggSales();
+        const sortedEggsSold = [...result].sort((a, b) => a.week - b.week);
+
+        setEggsSold(sortedEggsSold);
+        // console.log(sortedEggsSold);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const fetchFlocksData = async () => {
+      try {
+        const result = await dashboardService.flockDets();
         console.log(result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
+    fetchEggsSoldData();
+    fetchEggsProducedData();
+    fetchFlocksData(); //TODO: bakit hindi to per month, bakit naka array per id.
   }, []);
+
+  useEffect(() => {
+    if (eggsProduced.length > 0) {
+      const lastItem = eggsProduced[eggsProduced.length - 1];
+      const secondToLastItem = eggsProduced[eggsProduced.length - 2];
+
+      // Calculate the percentage difference
+      const lastItemValue = parseInt(lastItem.total_eggs_produced, 10);
+      const secondToLastItemValue = parseInt(
+        secondToLastItem.total_eggs_produced,
+        10
+      );
+
+      const percentDifference = Math.round(
+        ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100
+      );
+
+      // console.log(percentDifference);
+      setEggsProducedPercentage(percentDifference.toString());
+    } else {
+      setEggsProducedPercentage("0");
+    }
+  }, [eggsProduced]);
+
+  useEffect(() => {
+    if (eggsSold.length > 0) {
+      const lastItem = eggsSold[eggsSold.length - 1];
+      const secondToLastItem = eggsSold[eggsSold.length - 2];
+
+      // Calculate the percentage difference
+      const lastItemValue = parseInt(lastItem.total_eggs_sales, 10);
+      const secondToLastItemValue = parseInt(
+        secondToLastItem.total_eggs_sales,
+        10
+      );
+
+      const percentDifference = Math.round(
+        ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100
+      );
+
+      // console.log(percentDifference);
+      setEggsSoldPercentage(percentDifference.toString());
+    } else {
+      setEggsSoldPercentage("0");
+    }
+  }, [eggsSold]);
 
   // const readUploadFile = (e) => {
   //   e.preventDefault();
@@ -317,12 +391,12 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <StatBox
           title="Weekly Eggs Produced"
-          // value={
-          //   eggsProduced && eggsProduced.length > 0
-          //     ? eggsProduced[eggsProduced.length - 1]
-          //     : 0
-          // } TODO: do this
-          increase="+14%"
+          value={
+            eggsProduced[eggsProduced.length - 1]
+              ? eggsProduced[eggsProduced.length - 1].total_eggs_produced
+              : 0
+          }
+          increase={eggsProducedPercentage && eggsProducedPercentage + "%"}
           description="Since last week"
           icon={
             <ShoppingBasket
@@ -332,8 +406,12 @@ const Dashboard = () => {
         />
         <StatBox
           title="Weekly Eggs Sold"
-          value={rows.weekSold || 0} //"1239"
-          increase="+21%"
+          value={
+            eggsSold[eggsSold.length - 1]
+              ? "₱" + eggsSold[eggsSold.length - 1].total_eggs_sales
+              : 0
+          }
+          increase={eggsSoldPercentage && eggsSoldPercentage + "%"}
           description="Since last week"
           icon={
             <PointOfSale
