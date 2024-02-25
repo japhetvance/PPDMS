@@ -132,7 +132,7 @@ function EggsApproval() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Report Approval"
+        title="Egg Report Approval"
         subtitle="Manage reports made by employees about the eggs."
       />
       <div className="w-full py-5">

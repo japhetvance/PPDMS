@@ -20,7 +20,6 @@ import {
   randomArrayItem,
 } from "@mui/x-data-grid-generator";
 
-//API
 import usersService from "services/users.service";
 
 const roles = ["Market", "Finance", "Development"];
@@ -87,14 +86,13 @@ function EditToolbar(props) {
   );
 }
 
-export default function ManageUsersTable() {
+export default function ManageInverntoryTable() {
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
   React.useEffect(() => {
     const fetchUsers = async () => {
-      const result = await usersService.fetchUsers();
-      // console.log(result);
+      const result = await usersService.fetchInventory();
       setRows(result);
     };
     fetchUsers();
@@ -141,10 +139,10 @@ export default function ManageUsersTable() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 50, editable: true },
-    { field: "name", headerName: "Name", width: 180, editable: true },
-    { field: "email", headerName: "Email", width: 180, editable: true },
-    { field: "phone", headerName: "Phone", width: 180, editable: true },
+    { field: "id", headerName: "ID", width: 50, editable: false },
+    { field: "title", headerName: "Title", width: 180, editable: true },
+    { field: "price", headerName: "Price", width: 180, editable: true },
+    { field: "category", headerName: "Category", width: 180, editable: true },
     // {
     //   field: "age",
     //   headerName: "Age",

@@ -155,7 +155,7 @@ function SalesApproval() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Report Approval"
+        title="Sales Report Approval"
         subtitle="Manage reports made by employees about the sales."
       />
       <div className="w-full py-5">

@@ -69,6 +69,8 @@ const Dashboard = () => {
   const [eggsSold, setEggsSold] = useState([]);
   const [eggsSoldPercentage, setEggsSoldPercentage] = useState();
 
+  const [flocksDet, setFlocksDet] = useState([]);
+
   // useEffect(() => {
   //   fetchData();
   // }, []);
@@ -117,6 +119,7 @@ const Dashboard = () => {
       try {
         const result = await dashboardService.flockDets();
         console.log(result);
+        setFlocksDet(result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -124,7 +127,7 @@ const Dashboard = () => {
 
     fetchEggsSoldData();
     fetchEggsProducedData();
-    fetchFlocksData(); //TODO: bakit hindi to per month, bakit naka array per id.
+    fetchFlocksData();
   }, []);
 
   useEffect(() => {
@@ -430,7 +433,11 @@ const Dashboard = () => {
         </Box>
         <StatBox
           title="Flocks in Farm"
-          value={rows.flocksinFarm || 0} //"489"
+          value={
+            flocksDet[flocksDet.length - 1]
+              ? flocksDet[flocksDet.length - 1].flocks_number
+              : 0
+          }
           increase="+5%"
           description="Since last month"
           icon={
@@ -441,7 +448,11 @@ const Dashboard = () => {
         />
         <StatBox
           title="Vacant Cages"
-          value={rows.vacantCages || 0} //"19"
+          value={
+            flocksDet[flocksDet.length - 1]
+              ? flocksDet[flocksDet.length - 1].cage_available
+              : 0
+          }
           increase="+43%"
           description="Since last month"
           icon={

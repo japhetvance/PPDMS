@@ -49,7 +49,7 @@ function FlocksReport() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Generate Report"
+        title="Generate Flocks Report"
         subtitle="Fill in information to generate report about the flocks."
       />
       <div className="flex flex-col gap-4 h-[75vh] py-5">
