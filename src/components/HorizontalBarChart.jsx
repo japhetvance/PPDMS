@@ -2,25 +2,31 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ReactApexChart from "react-apexcharts";
 
-const ReactJsBarChart = ({ data }) => {
+const HorizontalBarChart = () => {
   const state = {
     series: [
-      { name: "Produced", data: data.produced },
-      { name: "Sold", data: data.sold },
-      { name: "Rejected", data: data.rejected },
-      { name: "Active", data: data.active },
+      { name: "Produced", data: [44, 55, 41, 37, 22, 43, 21] },
+      { name: "Sold", data: [53, 32, 33, 52, 13, 43, 32] },
     ],
     options: {
       chart: {
         type: "bar",
         height: 350,
-        stacked: false,
+        stacked: true,
       },
       plotOptions: {
         bar: {
-          horizontal: false,
-          columnWidth: "80%",
-          endingShape: "rounded",
+          horizontal: true,
+          dataLabels: {
+            total: {
+              enabled: true,
+              offsetX: 0,
+              style: {
+                fontSize: "13px",
+                fontWeight: 900,
+              },
+            },
+          },
         },
       },
       stroke: {
@@ -91,7 +97,7 @@ const ReactJsBarChart = ({ data }) => {
           options={state.options}
           series={state.series}
           type="bar"
-          height={450}
+          height={350}
         />
       </div>
       <div id="html-dist"></div>
@@ -99,4 +105,4 @@ const ReactJsBarChart = ({ data }) => {
   );
 };
 
-export default ReactJsBarChart;
+export default HorizontalBarChart;

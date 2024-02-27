@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material";
 
-import { ReactJsBarChart } from "components/DataVisualizationChart/ReactJsBarChart";
+import ReactJsBarChart from "components/DataVisualizationChart/ReactJsBarChart";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
