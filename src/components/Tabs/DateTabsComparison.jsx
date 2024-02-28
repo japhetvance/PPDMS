@@ -64,8 +64,8 @@ export default function DateTabsComparison({ data }) {
           textColor={theme.palette.secondary[300]}
         >
           <Tab label="Daily" {...a11yProps(0)} />
-          <Tab label="Monthly" {...a11yProps(1)} />
-          <Tab label="Yearly" {...a11yProps(2)} />
+          <Tab label="Weekly" {...a11yProps(1)} />
+          <Tab label="Monthly" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

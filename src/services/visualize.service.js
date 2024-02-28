@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "https://13.211.142.147/api";
+const baseUrl = "http://13.211.142.147/api";
 
 const eggVisualize = async () => {
   try {

@@ -5,6 +5,12 @@ import { DataGrid } from "@mui/x-data-grid";
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
+    field: "createdAt",
+    headerName: "Date",
+    width: 150,
+    editable: true,
+  },
+  {
     field: "role",
     headerName: "Role",
     width: 150,
@@ -37,8 +43,8 @@ const rows = [
     username: "admin_user",
     action: "View Dashboard",
     type: "navigation",
-    createdAt: "2/20/2024, 9:12:45 AM",
-    updatedAt: "2/20/2024, 9:12:45 AM",
+    createdAt: "2/20/2024",
+    updatedAt: "2/20/2024",
   },
   {
     id: 3,
@@ -46,8 +52,8 @@ const rows = [
     username: "john_doe",
     action: "Update Profile",
     type: "profile",
-    createdAt: "2/21/2024, 3:30:15 PM",
-    updatedAt: "2/21/2024, 3:30:15 PM",
+    createdAt: "2/21/2024",
+    updatedAt: "2/21/2024",
   },
   {
     id: 4,
@@ -55,8 +61,8 @@ const rows = [
     username: "content_editor",
     action: "Create New Post",
     type: "content",
-    createdAt: "2/22/2024, 11:45:10 AM",
-    updatedAt: "2/22/2024, 11:45:10 AM",
+    createdAt: "2/22/2024",
+    updatedAt: "2/22/2024",
   },
   {
     id: 5,
@@ -64,8 +70,8 @@ const rows = [
     username: "project_manager",
     action: "Approve Request",
     type: "approval",
-    createdAt: "2/23/2024, 4:18:30 PM",
-    updatedAt: "2/23/2024, 4:18:30 PM",
+    createdAt: "2/23/2024",
+    updatedAt: "2/23/2024",
   },
   {
     id: 6,
@@ -73,8 +79,8 @@ const rows = [
     username: "dev_user",
     action: "View Code Repository",
     type: "development",
-    createdAt: "2/24/2024, 8:55:05 AM",
-    updatedAt: "2/24/2024, 8:55:05 AM",
+    createdAt: "2/24/2024",
+    updatedAt: "2/24/2024",
   },
 ];
 export default function AuditTable() {

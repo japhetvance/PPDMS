@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const baseUrl = "https://13.211.142.147/api";
+const baseUrl = "http://13.211.142.147/api";
 
 const eggReport = async (formData, token) => {
   const { date, egg_sm_produced, egg_md_produced, egg_lg_produced, rejected } =
