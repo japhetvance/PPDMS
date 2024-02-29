@@ -67,6 +67,7 @@ const Dashboard = () => {
 
   //new dashboard states
   const [eggsProduced, setEggsProduced] = useState([]);
+  const [monthlyEggProd, setMonthlyEggProd] = useState([]);
   const [eggsProducedPercentage, setEggsProducedPercentage] = useState();
 
   const [eggsSold, setEggsSold] = useState([]);
@@ -74,28 +75,8 @@ const Dashboard = () => {
 
   const [flocksDet, setFlocksDet] = useState([]);
 
-  //Monthly egg produced line graph
-  const dummyLineData = () => {
-    const Produced = {
-      id: "Produced",
-      color: theme.palette.secondary.main,
-      data: [
-        { x: "Jan", y: 210 },
-        { x: "Feb", y: 207 },
-        { x: "Mar", y: 204 },
-        { x: "Apr", y: 208 },
-        { x: "May", y: 202 },
-        { x: "Jun", y: 204 },
-        { x: "Jul", y: 202 },
-        { x: "Aug", y: 209 },
-        { x: "Sep", y: 204 },
-        { x: "Oct", y: 202 },
-        { x: "Nov", y: 201 },
-        { x: "Dec", y: 207 },
-      ],
-    };
-    return [Produced];
-  };
+  //Line Graph State
+  const [lineGraphData, setLineGraphData] = useState([]);
 
   //Load API on render
   useEffect(() => {
@@ -132,9 +113,20 @@ const Dashboard = () => {
       }
     };
 
+    const fetchMonthlyEggProf = async () => {
+      try {
+        const result = await dashboardService.monthlyEggProd();
+        // console.log(result);
+        setMonthlyEggProd(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchEggsSoldData();
     fetchEggsProducedData();
     fetchFlocksData();
+    fetchMonthlyEggProf();
   }, []);
 
   //Calculate percentage for produced
@@ -184,6 +176,21 @@ const Dashboard = () => {
       setEggsSoldPercentage("0");
     }
   }, [eggsSold]);
+
+  //Line Graph data
+  useEffect(() => {
+    const newArray = monthlyEggProd.map(({ year, month, total_egg_prod }) => ({
+      x: month,
+      y: total_egg_prod,
+    }));
+    setLineGraphData([
+      {
+        id: "Produced",
+        color: theme.palette.secondary.main,
+        data: newArray,
+      },
+    ]);
+  }, [monthlyEggProd]);
 
   const removeFile = () => {
     setSelectedFile(null);
@@ -308,7 +315,7 @@ const Dashboard = () => {
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
             Egg Produced Overview
           </Typography>
-          <ResponsiveLineChart data={dummyLineData()} />
+          <ResponsiveLineChart data={lineGraphData} />
         </Box>
 
         <StatBox

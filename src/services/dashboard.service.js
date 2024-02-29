@@ -32,8 +32,32 @@ const eggSales = async () => {
   }
 };
 
+// Line Graph Monthly
+const monthlyEggProd = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/dashboard/egg/prod`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
+// Sales Table
+const salesTable = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/dashboard/transaction`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
 export default {
   flockDets,
   eggProd,
   eggSales,
+  monthlyEggProd,
+  salesTable,
 };
