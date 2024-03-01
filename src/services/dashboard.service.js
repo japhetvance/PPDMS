@@ -54,10 +54,22 @@ const salesTable = async () => {
   }
 };
 
+// Horizontal Bar Graph
+const EggProdBarGraph = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/dashboard/sales/prod`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
 export default {
   flockDets,
   eggProd,
   eggSales,
   monthlyEggProd,
   salesTable,
+  EggProdBarGraph,
 };

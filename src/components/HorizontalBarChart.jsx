@@ -1,12 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import ReactApexChart from "react-apexcharts";
 
+import dashboardService from "services/dashboard.service";
+
 const HorizontalBarChart = () => {
+  const [data, setData] = useState({});
+  const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await dashboardService.EggProdBarGraph();
+        console.log(result);
+
+        const produced = result.map((item) => item.egg_prod);
+        const sales = result.map((item) => item.egg_sales);
+        const dates = result.map((item) => {
+          const createdAt = new Date(item.createdAt);
+          return `${createdAt.getFullYear()}-${String(
+            createdAt.getMonth() + 1
+          ).padStart(2, "0")}-${String(createdAt.getDate()).padStart(2, "0")}`;
+        });
+
+        setData({ produced, sales });
+        setDates(dates);
+        console.log({ produced, sales });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const state = {
     series: [
-      { name: "Produced", data: [44, 55, 41, 37, 22, 43, 21] },
-      { name: "Sold", data: [53, 32, 33, 52, 13, 43, 32] },
+      { name: "Produced", data: data.produced },
+      { name: "Sold", data: data.sales },
     ],
     options: {
       chart: {
@@ -35,20 +65,8 @@ const HorizontalBarChart = () => {
       },
 
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
+        // categories: ["2024-03-01", "2024-02-29", "2024-02-28"],
+        categories: dates,
         labels: {
           formatter: function (val) {
             return val;
