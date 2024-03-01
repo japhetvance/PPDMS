@@ -4,13 +4,14 @@ import Header from "components/Header";
 import ManageInverntoryTable from "components/Tables/ManageInventoryTable";
 import StatBox from "components/StatBox";
 import EggIcon from "@mui/icons-material/Egg";
+import SalesTable from "components/Tables/SalesTable";
 
 function Inventory() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
         title="Manage Inventory"
-        subtitle="Modify data on the database."
+        subtitle="Sales overview and egg inventory."
       />
       <div className="w-full py-5 flex flex-col gap-2 ">
         <div className="w-full flex gap-2 justify-between items-center">
@@ -36,7 +37,8 @@ function Inventory() {
             icon={<EggIcon sx={{ color: "white", fontSize: "32px" }} />}
           />
         </div>
-        <ManageInverntoryTable />
+        {/* <ManageInverntoryTable /> */}
+        <SalesTable />
       </div>
     </Box>
   );
