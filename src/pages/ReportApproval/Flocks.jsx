@@ -73,7 +73,7 @@ function FlocksApproval() {
     },
     {
       field: "additional_flocks",
-      headerName: "Active",
+      headerName: "Additional",
       width: 100,
     },
     {
