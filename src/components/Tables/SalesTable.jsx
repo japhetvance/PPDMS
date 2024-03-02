@@ -2,6 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import dashboardService from "services/dashboard.service";
+import axios from "axios"
 
 export default function SalesTable() {
   const [row, setRow] = React.useState([]);
@@ -17,6 +18,19 @@ export default function SalesTable() {
     };
     fetchSalesData();
   }, []);
+
+  React.useEffect(() =>{
+    const fetchReports = async () =>{
+      try {
+        const data = await axios.get("https://13.211.142.147/api/fetch/egg/visualization")
+        console.log(data.data)
+        // setRow(data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchReports()
+  }, [])
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },

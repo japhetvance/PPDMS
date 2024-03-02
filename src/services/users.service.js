@@ -3,7 +3,7 @@ import axios from "axios";
 const fetchUsers = async () => {
   try {
     const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/users"
+      "https://13.211.142.147/api/fetch/user"
     );
     return response.data;
   } catch (error) {

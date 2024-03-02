@@ -144,31 +144,26 @@ export default function ManageUsersTable() {
     { field: "id", headerName: "ID", width: 50, editable: true },
     { field: "name", headerName: "Name", width: 180, editable: true },
     { field: "email", headerName: "Email", width: 180, editable: true },
-    { field: "phone", headerName: "Phone", width: 180, editable: true },
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   width: 80,
-    //   align: "left",
-    //   headerAlign: "left",
-    //   editable: true,
-    // },
-    // {
-    //   field: "joinDate",
-    //   headerName: "Join date",
-    //   type: "date",
-    //   width: 180,
-    //   editable: true,
-    // },
-    // {
-    //   field: "role",
-    //   headerName: "Department",
-    //   width: 220,
-    //   editable: true,
-    //   type: "singleSelect",
-    //   valueOptions: ["Market", "Finance", "Development"],
-    // },
+    { field: "username", headerName: "Username", width: 180, editable: true },
+
+    { field: "role", headerName: "Role", width: 180, editable: true },
+    {
+      field: "createdAt", headerName: "CreatedAt", flex: 1, renderCell: (params) => {
+        const updatedAtString = params.value;
+        const updatedAtDate = new Date(updatedAtString);
+        updatedAtDate.setHours(updatedAtDate.getHours());
+
+        const formattedDate = new Intl.DateTimeFormat('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        }).format(updatedAtDate);
+
+        return <div>{formattedDate}</div>;
+      }
+    },
     {
       field: "actions",
       type: "actions",

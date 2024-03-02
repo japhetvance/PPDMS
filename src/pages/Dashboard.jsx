@@ -136,11 +136,8 @@ const Dashboard = () => {
       const secondToLastItem = eggsProduced[eggsProduced.length - 2];
 
       // Calculate the percentage difference
-      const lastItemValue = parseInt(lastItem.total_eggs_produced, 10);
-      const secondToLastItemValue = parseInt(
-        secondToLastItem.total_eggs_produced,
-        10
-      );
+      const lastItemValue = lastItem !== undefined ? parseInt(lastItem.total_eggs_produced, 10) : 0;
+      const secondToLastItemValue = secondToLastItem !== undefined ? parseInt(secondToLastItem.total_eggs_produced, 10) : 0;
 
       const percentDifference = Math.round(
         ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100
@@ -160,11 +157,8 @@ const Dashboard = () => {
       const secondToLastItem = eggsSold[eggsSold.length - 2];
 
       // Calculate the percentage difference
-      const lastItemValue = parseInt(lastItem.total_eggs_sales, 10);
-      const secondToLastItemValue = parseInt(
-        secondToLastItem.total_eggs_sales,
-        10
-      );
+      const lastItemValue = lastItem !== undefined ? parseInt(lastItem.total_eggs_sales, 10) : 0;
+      const secondToLastItemValue = secondToLastItem !== undefined ? parseInt(secondToLastItem.total_eggs_sales, 10) : 0;
 
       const percentDifference = Math.round(
         ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100

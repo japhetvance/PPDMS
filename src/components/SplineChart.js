@@ -1,57 +1,76 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import ReactApexChart from "react-apexcharts";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ReactApexChart from 'react-apexcharts';
 
-const SplineChart = () => {
-  const state = {
-    series: [
-      { name: "series1", data: [31, 40, 28, 51, 42, 109, 100] },
-      { name: "series2", data: [11, 32, 45, 32, 34, 52, 41] },
-    ],
-    options: {
-      chart: {
-        height: 350,
-        type: "area",
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "smooth",
-      },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:30:00.000Z",
-          "2018-09-19T02:30:00.000Z",
-          "2018-09-19T03:30:00.000Z",
-          "2018-09-19T04:30:00.000Z",
-          "2018-09-19T05:30:00.000Z",
-          "2018-09-19T06:30:00.000Z",
-        ],
-      },
-      tooltip: {
-        x: {
-          format: "dd/MM/yy HH:mm",
-        },
-      },
+function ProductionForecastChart() {
+  const [forecastData, setForecastData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://13.211.142.147/api/production/forecastings');
+        setForecastData(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!forecastData) return <p>No data available</p>;
+
+  // Prepare series data
+  const series = Object.keys(forecastData).map((eggType) => {
+    let data = forecastData[eggType];
+    if (Array.isArray(data)) {
+      // If data is an array, append the predicted value to it
+      data = [...data, forecastData[`${eggType}_predicted`]];
+    } else {
+      // If data is a single value, create an array with just the predicted value
+      data = [forecastData[`${eggType}_predicted`]];
+    }
+    return {
+      name: eggType,
+      data: data,
+    };
+  });
+
+  // Prepare categories (x-axis labels)
+  const categories = Array.from({ length: series[0].data.length }, (_, i) => i + 1);
+
+  // Prepare options for the chart
+  const options = {
+    chart: {
+      height: 350,
+      type: 'bar',
+    },
+    xaxis: {
+      categories: categories,
+    },
+    title: {
+      text: 'Production Forecast',
+      align: 'center',
+    },
+    tooltip: {
+      shared: false,
+    },
+    legend: {
+      position: 'top',
     },
   };
 
   return (
     <div>
-      <div id="chart">
-        <ReactApexChart
-          options={state.options}
-          series={state.series}
-          type="area"
-          height={450}
-        />
-      </div>
-      <div id="html-dist"></div>
+      <ReactApexChart options={options} series={series} type="bar" height={350} />
     </div>
   );
-};
+}
 
-export default SplineChart;
+export default ProductionForecastChart;

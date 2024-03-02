@@ -45,7 +45,6 @@ export default function ManageInverntoryTable() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
-    { field: "date", headerName: "Date", width: 180, editable: true },
     { field: "egg_sm_produced", headerName: "Egg Small", width: 180, editable: true },
     { field: "egg_md_produced", headerName: "Egg Medium", width: 180, editable: true },
     { field: "egg_lg_produced", headerName: "Egg Large", width: 180, editable: true },
@@ -66,31 +65,6 @@ export default function ManageInverntoryTable() {
       return <div>{formattedDate}</div>;
     }
   }
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   width: 80,
-    //   align: "left",
-    //   headerAlign: "left",
-    //   editable: true,
-    // },
-    // {
-    //   field: "joinDate",
-    //   headerName: "Join date",
-    //   type: "date",
-    //   width: 180,
-    //   editable: true,
-    // },
-    // {
-    //   field: "role",
-    //   headerName: "Department",
-    //   width: 220,
-    //   editable: true,
-    //   type: "singleSelect",
-    //   valueOptions: ["Market", "Finance", "Development"],
-    // },
-  
   ];
 
   return (
