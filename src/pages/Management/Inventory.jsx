@@ -6,8 +6,8 @@ import SalesInventoryTable from "components/Tables/SalesInventoryTable";
 import FlockInventoryTable from "components/Tables/FlockInventoryTable";
 import StatBox from "components/StatBox";
 import EggIcon from "@mui/icons-material/Egg";
-import { Tabs, Tab } from '@mui/material';
-import axios from "axios"
+import { Tabs, Tab } from "@mui/material";
+import axios from "axios";
 
 function Inventory() {
   const [eggCounts, setEggCounts] = useState([]);
@@ -18,12 +18,13 @@ function Inventory() {
   };
 
   useEffect(() => {
-    axios.get('https://13.211.142.147/api/current/eggcount')
-      .then(response => {
+    axios
+      .get("https://13.211.142.147/api/current/eggcount")
+      .then((response) => {
         setEggCounts(response.data);
       })
-      .catch(error => {
-        console.error('Error fetching egg counts:', error);
+      .catch((error) => {
+        console.error("Error fetching egg counts:", error);
       });
   }, []);
 
@@ -34,29 +35,47 @@ function Inventory() {
         subtitle="Sales overview and egg inventory."
       />
       <div className="w-full py-5 flex flex-col gap-2 ">
-        <div className="w-full flex gap-2 justify-between items-center">
-          {eggCounts.map(egg => (
+        <div className="w-[99%] flex gap-2 justify-between items-center">
+          {eggCounts.map((egg) => (
             <StatBox
               key={egg.egg_type}
-              title={`Remaining ${egg.egg_type.replace('_', ' ').toUpperCase()}`}
+              title={`Remaining ${
+                egg.egg_type === "egg_sm"
+                  ? "Small Eggs"
+                  : egg.egg_type === "egg_md"
+                  ? "Medium Eggs"
+                  : "Large Eggs"
+              }`}
               value={egg.egg_quantity}
-              // increase="1%"
               description={`${egg.egg_cost} php per piece.`}
-              icon={<EggIcon sx={{ color: "white", fontSize: egg.egg_type === 'egg_sm' ? "16px" : egg.egg_type === 'egg_md' ? "24px" : "32px" }} />}
+              icon={
+                <EggIcon
+                  sx={{
+                    color: "white",
+                    fontSize:
+                      egg.egg_type === "egg_sm"
+                        ? "16px"
+                        : egg.egg_type === "egg_md"
+                        ? "24px"
+                        : "32px",
+                  }}
+                />
+              }
             />
           ))}
         </div>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label="Manage Inventory" />
-          <Tab label="Sales Inventory" />
-          <Tab label="Flocks Inventory" />
-        </Tabs>
-        {tabIndex === 0 && <ManageInverntoryTable />}
-        {tabIndex === 1 && <SalesInventoryTable />}
-        {tabIndex === 2 && <FlockInventoryTable />}
-    
-    </div>
-    </Box >
+        <div className="w-[99%]">
+          <Tabs value={tabIndex} onChange={handleTabChange}>
+            <Tab label="Manage Inventory" />
+            <Tab label="Sales Inventory" />
+            <Tab label="Flocks Inventory" />
+          </Tabs>
+          {tabIndex === 0 && <ManageInverntoryTable />}
+          {tabIndex === 1 && <SalesInventoryTable />}
+          {tabIndex === 2 && <FlockInventoryTable />}
+        </div>
+      </div>
+    </Box>
   );
 }
 

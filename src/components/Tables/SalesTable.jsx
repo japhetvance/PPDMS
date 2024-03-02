@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import dashboardService from "services/dashboard.service";
-import axios from "axios"
+import axios from "axios";
 
 export default function SalesTable() {
   const [row, setRow] = React.useState([]);
@@ -11,7 +11,7 @@ export default function SalesTable() {
       try {
         const result = await dashboardService.salesTable();
         setRow(result);
-        console.log(result);
+        console.log("Transaction: ", result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -19,18 +19,20 @@ export default function SalesTable() {
     fetchSalesData();
   }, []);
 
-  React.useEffect(() =>{
-    const fetchReports = async () =>{
+  React.useEffect(() => {
+    const fetchReports = async () => {
       try {
-        const data = await axios.get("https://13.211.142.147/api/fetch/egg/visualization")
-        console.log(data.data)
+        const data = await axios.get(
+          "https://13.211.142.147/api/fetch/egg/visualization"
+        );
+        console.log(data.data);
         // setRow(data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
-    fetchReports()
-  }, [])
+    };
+    fetchReports();
+  }, []);
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
@@ -56,7 +58,7 @@ export default function SalesTable() {
   ];
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <DataGrid
         rows={row}
         columns={columns}

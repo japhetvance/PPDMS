@@ -136,8 +136,12 @@ const Dashboard = () => {
       const secondToLastItem = eggsProduced[eggsProduced.length - 2];
 
       // Calculate the percentage difference
-      const lastItemValue = lastItem !== undefined ? parseInt(lastItem.total_eggs_produced, 10) : 0;
-      const secondToLastItemValue = secondToLastItem !== undefined ? parseInt(secondToLastItem.total_eggs_produced, 10) : 0;
+      const lastItemValue =
+        lastItem !== undefined ? parseInt(lastItem.total_eggs_produced, 10) : 0;
+      const secondToLastItemValue =
+        secondToLastItem !== undefined
+          ? parseInt(secondToLastItem.total_eggs_produced, 10)
+          : 0;
 
       const percentDifference = Math.round(
         ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100
@@ -157,8 +161,12 @@ const Dashboard = () => {
       const secondToLastItem = eggsSold[eggsSold.length - 2];
 
       // Calculate the percentage difference
-      const lastItemValue = lastItem !== undefined ? parseInt(lastItem.total_eggs_sales, 10) : 0;
-      const secondToLastItemValue = secondToLastItem !== undefined ? parseInt(secondToLastItem.total_eggs_sales, 10) : 0;
+      const lastItemValue =
+        lastItem !== undefined ? parseInt(lastItem.total_eggs_sales, 10) : 0;
+      const secondToLastItemValue =
+        secondToLastItem !== undefined
+          ? parseInt(secondToLastItem.total_eggs_sales, 10)
+          : 0;
 
       const percentDifference = Math.round(
         ((lastItemValue - secondToLastItemValue) / secondToLastItemValue) * 100
@@ -345,6 +353,9 @@ const Dashboard = () => {
 
         {/* ROW 2 */}
         <Box
+          backgroundColor={theme.palette.background.alt}
+          p="1.5rem"
+          borderRadius="0.55rem"
           gridColumn="span 8"
           gridRow="span 3"
           sx={{
@@ -373,6 +384,9 @@ const Dashboard = () => {
             },
           }}
         >
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
+            Transaction Table
+          </Typography>
           <SalesTable />
         </Box>
         <Box
