@@ -66,7 +66,7 @@ function Inventory() {
         </div>
         <div className="w-[99%]">
           <Tabs value={tabIndex} onChange={handleTabChange}>
-            <Tab label="Manage Inventory" />
+            <Tab label="Egg Inventory" />
             <Tab label="Sales Inventory" />
             <Tab label="Flocks Inventory" />
           </Tabs>
