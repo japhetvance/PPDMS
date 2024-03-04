@@ -11,11 +11,18 @@ const Eggs = () => {
   const theme = useTheme();
 
   useEffect(() => {
-    const fetchEggVisualization = async () => {
-      const result = await visualizeService.eggVisualize();
+    // const fetchEggVisualization = async () => {
+    //   const result = await visualizeService.eggVisualize();
+    //   console.log(result);
+    // };
+    // fetchEggVisualization();
+
+    const fetchEggDaily = async () => {
+      const result = await visualizeService.dailyEggVisualize();
       console.log(result);
     };
-    fetchEggVisualization();
+    fetchEggDaily();
+    // TODO: continue this
   }, []);
 
   const [category, setCategory] = React.useState("Produced");
