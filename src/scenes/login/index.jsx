@@ -29,6 +29,7 @@ import IconButton from "@mui/material/IconButton";
 
 //api
 import auth from "../../services/auth.service";
+import auditService from "services/audit.service";
 
 export default function Login() {
   const theme = useTheme();
@@ -48,6 +49,11 @@ export default function Login() {
 
     const result = await auth.login(username, password);
     if (result && result.token) {
+      auditService.postAudit(
+        "Login to website",
+        "authentication",
+        result.token
+      );
       sessionStorage.setItem("token", result.token);
       window.location = "/";
     } else {
