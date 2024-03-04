@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ReactApexChart from 'react-apexcharts';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ReactApexChart from "react-apexcharts";
 
 function ProductionForecastChart() {
-  const [forecastData, setForecastData] = useState(null);
+  const [forecastData, setForecastData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://13.211.142.147/api/production/forecastings');
+        const response = await axios.get(
+          "https://13.211.142.147/api/production/forecastings"
+        );
+        console.log("response: ", response.data);
         setForecastData(response.data);
         setLoading(false);
       } catch (error) {
@@ -42,33 +45,60 @@ function ProductionForecastChart() {
     };
   });
 
-  // Prepare categories (x-axis labels)
-  const categories = Array.from({ length: series[0].data.length }, (_, i) => i + 1);
+  const categories = Array.from(
+    { length: series[0].data.length },
+    (_, i) => "Week" + (i + 1)
+  );
 
-  // Prepare options for the chart
   const options = {
     chart: {
       height: 350,
-      type: 'bar',
+      type: "bar",
     },
     xaxis: {
       categories: categories,
+      labels: {
+        style: {
+          colors: "#ffffff",
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: "#ffffff",
+        },
+      },
     },
     title: {
-      text: 'Production Forecast',
-      align: 'center',
+      text: "Production Forecast",
+      align: "center",
+      style: {
+        fontSize: "20px",
+        fontWeight: "bold",
+        fontFamily: "Poppins",
+        color: "white",
+      },
     },
     tooltip: {
-      shared: false,
+      enabled: false,
     },
     legend: {
-      position: 'top',
+      position: "top",
+      labels: {
+        colors: "white",
+      },
     },
   };
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="bar" height={350} />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="bar"
+        height={550}
+      />
     </div>
   );
 }

@@ -97,7 +97,7 @@ const Dashboard = () => {
         const sortedEggsSold = [...result].sort((a, b) => a.week - b.week);
 
         setEggsSold(sortedEggsSold);
-        // console.log(sortedEggsSold);
+        console.log("sortedEggsSold: ", sortedEggsSold);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -156,7 +156,7 @@ const Dashboard = () => {
 
   //Calculate percentage for sold
   useEffect(() => {
-    if (eggsSold.length > 0) {
+    if (eggsSold.length > 1) {
       const lastItem = eggsSold[eggsSold.length - 1];
       const secondToLastItem = eggsSold[eggsSold.length - 2];
 

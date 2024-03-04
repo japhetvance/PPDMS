@@ -9,7 +9,7 @@ function Insights() {
         title="Data Insights and Analysis"
         subtitle="Generate forecast or analytics for all data available."
       />
-      <div className="w-full py-5">
+      <div className="w-full py-5 ">
         <SplineChart />
       </div>
     </Box>
