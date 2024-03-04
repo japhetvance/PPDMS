@@ -38,7 +38,9 @@ const StatBox = ({ title, value, increase, icon, description }) => {
         >
           {increase}
         </Typography>
-        <Typography>{description}</Typography>
+        <Typography sx={{ fontSize: ".7rem" }} fontStyle="italic">
+          {description}
+        </Typography>
       </FlexBetween>
     </Box>
   );

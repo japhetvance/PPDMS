@@ -71,7 +71,11 @@ const Sales = () => {
       </div>
       <Box height="75vh">
         <Box>
-          <DateTabs data={dummyFormData()} />
+          <DateTabs
+            daily={dummyFormData()}
+            weekly={dummyFormData()}
+            monthly={dummyFormData()}
+          />
         </Box>
       </Box>
     </Box>

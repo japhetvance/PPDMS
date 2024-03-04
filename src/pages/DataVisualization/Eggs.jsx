@@ -6,65 +6,114 @@ import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
 
 import visualizeService from "services/visualize.service";
+import dashboardService from "services/dashboard.service";
 
 const Eggs = () => {
   const theme = useTheme();
-
-  useEffect(() => {
-    // const fetchEggVisualization = async () => {
-    //   const result = await visualizeService.eggVisualize();
-    //   console.log(result);
-    // };
-    // fetchEggVisualization();
-
-    const fetchEggDaily = async () => {
-      const result = await visualizeService.dailyEggVisualize();
-      console.log(result);
-    };
-    fetchEggDaily();
-    // TODO: continue this
-  }, []);
+  const [dailyEgg, setDailyEgg] = useState([]);
+  const [weeklyEgg, setWeeklyEgg] = useState([]);
+  const [monthlyEgg, setMonthlyEgg] = useState([]);
 
   const [category, setCategory] = React.useState("Produced");
-
   const selectOptions = ["Produced", "Rejected"];
 
-  const dummyFormData = () => {
+  useEffect(() => {
+    //Fetch daily
+    const fetchEggDaily = async () => {
+      const result = await visualizeService.dailyEggVisualize();
+      setDailyEgg(result);
+    };
+
+    //Fetch daily
+    const fetchEggWeekly = async () => {
+      const result = await visualizeService.weeklyEggVisualize();
+      setWeeklyEgg(result);
+    };
+
+    //Fetch daily
+    const fetchEggMonthly = async () => {
+      const result = await dashboardService.monthlyEggProd();
+      setMonthlyEgg(result);
+    };
+
+    fetchEggDaily();
+    fetchEggWeekly();
+    fetchEggMonthly();
+  }, []);
+
+  const dailyEggData = () => {
     const Produced = {
       id: "Produced",
       color: theme.palette.secondary.main,
-      data: [
-        { x: "Jan", y: 210 },
-        { x: "Feb", y: 207 },
-        { x: "Mar", y: 204 },
-        { x: "Apr", y: 208 },
-        { x: "May", y: 202 },
-        { x: "Jun", y: 204 },
-        { x: "Jul", y: 202 },
-        { x: "Aug", y: 209 },
-        { x: "Sep", y: 204 },
-        { x: "Oct", y: 202 },
-        { x: "Nov", y: 201 },
-        { x: "Dec", y: 207 },
-      ],
+      data: dailyEgg.slice(-7).map(({ egg_prod, createdAt }) => ({
+        x: createdAt.slice(5, 10),
+        y: egg_prod,
+      })),
     };
     const Rejected = {
       id: "Rejected",
       color: theme.palette.secondary[600],
-      data: [
-        { x: "Jan", y: 21 },
-        { x: "Feb", y: 20 },
-        { x: "Mar", y: 20 },
-        { x: "Apr", y: 28 },
-        { x: "May", y: 20 },
-        { x: "Jun", y: 24 },
-        { x: "Jul", y: 22 },
-        { x: "Aug", y: 29 },
-        { x: "Sep", y: 24 },
-        { x: "Oct", y: 22 },
-        { x: "Nov", y: 21 },
-        { x: "Dec", y: 27 },
-      ],
+      data: dailyEgg.slice(-7).map(({ egg_reject, createdAt }) => ({
+        x: createdAt.slice(5, 10),
+        y: egg_reject,
+      })),
+    };
+    // Use category state to select the appropriate data
+    const selectedData = category === "Produced" ? Produced : Rejected;
+
+    const formattedData = [selectedData];
+    return formattedData;
+  };
+
+  const weeklyEggData = () => {
+    const Produced = {
+      id: "Produced",
+      color: theme.palette.secondary.main,
+      data: weeklyEgg
+        .map(({ eggProd }) =>
+          eggProd.slice(-4).map(({ week, total_egg_prod }) => ({
+            x: week,
+            y: total_egg_prod,
+          }))
+        )
+        .flat(),
+    };
+    const Rejected = {
+      id: "Rejected",
+      color: theme.palette.secondary[600],
+      data: weeklyEgg
+        .map(({ eggReject }) =>
+          eggReject.slice(-4).map(({ week, total_egg_reject }) => ({
+            x: week,
+            y: total_egg_reject,
+          }))
+        )
+        .flat(),
+    };
+    // Use category state to select the appropriate data
+    const selectedData = category === "Produced" ? Produced : Rejected;
+
+    const formattedData = [selectedData];
+    return formattedData;
+  };
+
+  const monthlyEggData = () => {
+    const Produced = {
+      id: "Produced",
+      color: theme.palette.secondary.main,
+      data: monthlyEgg.slice(-12).map(({ month, total_egg_prod }) => ({
+        x: month,
+        y: total_egg_prod,
+      })),
+    };
+    // TODO: insert the rejected here.
+    const Rejected = {
+      id: "Rejected",
+      color: theme.palette.secondary[600],
+      data: monthlyEgg.map(({ month, total_egg_prod }) => ({
+        x: month,
+        y: total_egg_prod,
+      })),
     };
     // Use category state to select the appropriate data
     const selectedData = category === "Produced" ? Produced : Rejected;
@@ -88,7 +137,11 @@ const Eggs = () => {
       </div>
       <Box height="75vh">
         <Box>
-          <DateTabs data={dummyFormData()} />
+          <DateTabs
+            daily={dailyEggData()}
+            weekly={weeklyEggData()}
+            monthly={monthlyEggData()}
+          />
         </Box>
       </Box>
     </Box>

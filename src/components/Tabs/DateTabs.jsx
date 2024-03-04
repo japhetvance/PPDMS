@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function DateTabs({ data }) {
+export default function DateTabs({ daily, weekly, monthly }) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -70,17 +70,17 @@ export default function DateTabs({ data }) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className=" h-[30rem]">
-          <ResponsiveLineChart data={data} />
+          <ResponsiveLineChart data={daily} />
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className=" h-[30rem]">
-          <ResponsiveLineChart data={data} />
+          <ResponsiveLineChart data={weekly} />
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <div className=" h-[30rem]">
-          <ResponsiveLineChart data={data} />
+          <ResponsiveLineChart data={monthly} />
         </div>
       </CustomTabPanel>
     </Box>
