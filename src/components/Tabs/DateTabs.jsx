@@ -41,9 +41,8 @@ function a11yProps(index) {
   };
 }
 
-export default function DateTabs({ daily, weekly, monthly }) {
+export default function DateTabs({ daily, weekly, monthly, value, setValue }) {
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

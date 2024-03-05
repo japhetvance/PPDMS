@@ -51,7 +51,7 @@ export default function Login() {
     if (result && result.token) {
       auditService.postAudit(
         "Login to website",
-        "authentication",
+        "Authentication",
         result.token
       );
       sessionStorage.setItem("token", result.token);

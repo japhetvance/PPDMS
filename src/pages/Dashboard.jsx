@@ -239,7 +239,7 @@ const Dashboard = () => {
           subtitle="Poultry Monitoring System Dashboard"
         />
 
-        <label>
+        {/* <label>
           <Button
             // onClick={handleButtonClick}
             sx={{
@@ -261,7 +261,7 @@ const Dashboard = () => {
             // onChange={readUploadFile}
             style={{ display: "none" }}
           />
-        </label>
+        </label> */}
       </FlexBetween>
 
       <Box

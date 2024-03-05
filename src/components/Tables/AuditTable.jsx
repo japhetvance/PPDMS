@@ -52,7 +52,7 @@ export default function AuditTable() {
   ];
 
   return (
-    <Box sx={{ height: "auto", width: "100%" }}>
+    <Box sx={{ height: "30rem", width: "100%" }}>
       <DataGrid
         rows={auditData}
         columns={columns}

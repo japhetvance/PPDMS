@@ -4,12 +4,16 @@ import Header from "components/Header";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
+import { Button } from "@mui/material";
+
+//export
+import { CSVLink, CSVDownload } from "react-csv";
 
 const Sales = () => {
   const theme = useTheme();
+  const [value, setValue] = React.useState(0);
 
   const [category, setCategory] = React.useState("Sales");
-
   const selectOptions = ["Sales", "Profit"];
 
   const dummyFormData = () => {
@@ -63,11 +67,25 @@ const Sales = () => {
           title="SALES REPORT"
           subtitle="Record of sales and profits for eggs."
         />
-        <SelectFilter
-          category={category}
-          setCategory={setCategory}
-          selectOptions={selectOptions}
-        />
+        <div className="flex justify-center gap-2">
+          {/* <Button variant="contained">
+            <CSVLink
+              data={
+                value === 0 ? dailyEgg : value === 1 ? weeklyEgg : monthlyEgg
+              }
+              filename={`egg_export_${
+                value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+              }.csv`}
+            >
+              Export Data
+            </CSVLink>
+          </Button> */}
+          <SelectFilter
+            category={category}
+            setCategory={setCategory}
+            selectOptions={selectOptions}
+          />
+        </div>
       </div>
       <Box height="75vh">
         <Box>
@@ -75,6 +93,8 @@ const Sales = () => {
             daily={dummyFormData()}
             weekly={dummyFormData()}
             monthly={dummyFormData()}
+            value={value}
+            setValue={setValue}
           />
         </Box>
       </Box>
