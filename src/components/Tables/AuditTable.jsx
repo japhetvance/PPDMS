@@ -40,7 +40,7 @@ export default function AuditTable() {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 250,
       editable: true,
     },
     {
@@ -52,14 +52,14 @@ export default function AuditTable() {
   ];
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: "auto", width: "100%" }}>
       <DataGrid
         rows={auditData}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}

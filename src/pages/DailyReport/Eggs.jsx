@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 
 //API
 import dailyService from "services/daily.service";
+import auditService from "services/audit.service";
 
 function EggsReport() {
   const token = sessionStorage.getItem("token");
@@ -31,6 +32,8 @@ function EggsReport() {
     try {
       const result = await dailyService.eggReport(data, token);
       toast.success("Successfully Added.");
+
+      auditService.postAudit("Made a report on eggs.", "Daily Report", token);
 
       setTimeout(() => {
         window.location.reload();
