@@ -11,7 +11,14 @@ import {
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 
+//API
+import auditService from "services/audit.service";
+
+//export
+import { CSVLink, CSVDownload } from "react-csv";
+
 export default function ManageInverntoryTable() {
+  const token = sessionStorage.getItem("token");
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -88,31 +95,15 @@ export default function ManageInverntoryTable() {
         return <div>{formattedDate}</div>;
       },
     },
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   width: 80,
-    //   align: "left",
-    //   headerAlign: "left",
-    //   editable: true,
-    // },
-    // {
-    //   field: "joinDate",
-    //   headerName: "Join date",
-    //   type: "date",
-    //   width: 180,
-    //   editable: true,
-    // },
-    // {
-    //   field: "role",
-    //   headerName: "Department",
-    //   width: 220,
-    //   editable: true,
-    //   type: "singleSelect",
-    //   valueOptions: ["Market", "Finance", "Development"],
-    // },
   ];
+
+  const handleExport = async () => {
+    await auditService.postAudit(
+      `Exported the egg inventory.`,
+      "Download Export",
+      token
+    );
+  };
 
   return (
     <Box
@@ -127,6 +118,15 @@ export default function ManageInverntoryTable() {
         },
       }}
     >
+      <CSVLink data={rows} filename="Egg_Inventory.csv">
+        <Button
+          variant="contained"
+          sx={{ m: "10px", position: "absolute", top: 0, right: 0 }}
+          onClick={() => handleExport()}
+        >
+          Export Data
+        </Button>
+      </CSVLink>
       <DataGrid
         rows={rows}
         columns={columns}

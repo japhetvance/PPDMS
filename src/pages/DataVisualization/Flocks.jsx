@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,17 +6,58 @@ import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
 import { Button } from "@mui/material";
 
+//API
+import visualizeService from "services/visualize.service";
+import auditService from "services/audit.service";
+
 //export
 import { CSVLink, CSVDownload } from "react-csv";
 
 const Flocks = () => {
+  const token = sessionStorage.getItem("token");
   const theme = useTheme();
+  const [dailyFlocks, setDailyFlocks] = useState([]);
+  const [weeklyFlocks, setWeeklyFlocks] = useState([]);
+  const [monthlyFlocks, setMonthlyFlocks] = useState([]);
   const [value, setValue] = React.useState(0);
 
   const [category, setCategory] = React.useState("Active");
   const selectOptions = ["Active", "Deceased", "Sick", "Cal"];
 
-  const dummyFormData = () => {
+  useEffect(() => {
+    const fetchDailyFlocks = async () => {
+      const result = await visualizeService.dailyFlocksVisualize();
+      const transformedData = Object.entries(result.dailyCounts).map(
+        ([date, values]) => ({
+          date,
+          ...values,
+        })
+      );
+      setDailyFlocks(transformedData);
+    };
+
+    const fetchWeeklyFlocks = async () => {
+      const result = await visualizeService.weeklyFlocksVisualize();
+      const transformedData = Object.entries(result.weeklyCounts).map(
+        ([date, values]) => ({
+          date,
+          ...values,
+        })
+      );
+      setWeeklyFlocks(transformedData);
+    };
+
+    const fetchMonthlyFlocks = async () => {
+      const result = await visualizeService.monthlyFlocksVisualize();
+      setMonthlyFlocks(result);
+    };
+
+    fetchDailyFlocks();
+    fetchWeeklyFlocks();
+    fetchMonthlyFlocks();
+  }, []);
+
+  const dailyFlockData = () => {
     let selectedData;
 
     switch (category) {
@@ -24,80 +65,40 @@ const Flocks = () => {
         selectedData = {
           id: "Active",
           color: theme.palette.secondary.main,
-          data: [
-            { x: "Jan", y: 210 },
-            { x: "Feb", y: 200 },
-            { x: "Mar", y: 220 },
-            { x: "Apr", y: 260 },
-            { x: "May", y: 210 },
-            { x: "Jun", y: 220 },
-            { x: "Jul", y: 220 },
-            { x: "Aug", y: 290 },
-            { x: "Sep", y: 240 },
-            { x: "Oct", y: 220 },
-            { x: "Nov", y: 210 },
-            { x: "Dec", y: 270 },
-          ],
+          data: dailyFlocks.slice(-7).map(({ date, additional_flocks }) => ({
+            x: date,
+            y: additional_flocks,
+          })),
         };
         break;
       case "Deceased":
         selectedData = {
           id: "Deceased",
           color: theme.palette.secondary.main,
-          data: [
-            { x: "Jan", y: 31 },
-            { x: "Feb", y: 36 },
-            { x: "Mar", y: 33 },
-            { x: "Apr", y: 38 },
-            { x: "May", y: 30 },
-            { x: "Jun", y: 33 },
-            { x: "Jul", y: 32 },
-            { x: "Aug", y: 37 },
-            { x: "Sep", y: 34 },
-            { x: "Oct", y: 32 },
-            { x: "Nov", y: 31 },
-            { x: "Dec", y: 34 },
-          ],
+          data: dailyFlocks.slice(-7).map(({ date, deceased_flocks }) => ({
+            x: date,
+            y: deceased_flocks,
+          })),
         };
         break;
       case "Sick":
         selectedData = {
           id: "Sick",
           color: theme.palette.secondary.main,
-          data: [
-            { x: "Jan", y: 1 },
-            { x: "Feb", y: 4 },
-            { x: "Mar", y: 6 },
-            { x: "Apr", y: 8 },
-            { x: "May", y: 9 },
-            { x: "Jun", y: 4 },
-            { x: "Jul", y: 2 },
-            { x: "Aug", y: 9 },
-            { x: "Sep", y: 4 },
-            { x: "Oct", y: 2 },
-            { x: "Nov", y: 9 },
-            { x: "Dec", y: 7 },
-          ],
+          data: dailyFlocks.slice(-7).map(({ date, sick_flocks }) => ({
+            x: date,
+            y: sick_flocks,
+          })),
         };
         break;
       case "Cal":
         selectedData = {
           id: "Cal",
           color: theme.palette.secondary.main,
-          data: [
-            { x: "Jan", y: 11 },
-            { x: "Feb", y: 10 },
-            { x: "Mar", y: 10 },
-            { x: "Apr", y: 18 },
-            { x: "May", y: 10 },
-            { x: "Jun", y: 14 },
-            { x: "Jul", y: 12 },
-            { x: "Aug", y: 19 },
-            { x: "Sep", y: 14 },
-            { x: "Oct", y: 12 },
-            { x: "Nov", y: 11 },
-            { x: "Dec", y: 17 },
-          ],
+          data: dailyFlocks.slice(-7).map(({ date, cal }) => ({
+            x: date,
+            y: cal,
+          })),
         };
         break;
       default:
@@ -108,6 +109,118 @@ const Flocks = () => {
     return formattedData;
   };
 
+  const weeklyFlockData = () => {
+    let selectedData;
+
+    switch (category) {
+      case "Active":
+        selectedData = {
+          id: "Active",
+          color: theme.palette.secondary.main,
+          data: weeklyFlocks.slice(-4).map(({ date, additional_flocks }) => ({
+            x: date,
+            y: additional_flocks,
+          })),
+        };
+        break;
+      case "Deceased":
+        selectedData = {
+          id: "Deceased",
+          color: theme.palette.secondary.main,
+          data: weeklyFlocks.slice(-4).map(({ date, deceased_flocks }) => ({
+            x: date,
+            y: deceased_flocks,
+          })),
+        };
+        break;
+      case "Sick":
+        selectedData = {
+          id: "Sick",
+          color: theme.palette.secondary.main,
+          data: weeklyFlocks.slice(-4).map(({ date, sick_flocks }) => ({
+            x: date,
+            y: sick_flocks,
+          })),
+        };
+        break;
+      case "Cal":
+        selectedData = {
+          id: "Cal",
+          color: theme.palette.secondary.main,
+          data: weeklyFlocks.slice(-4).map(({ date, cal }) => ({
+            x: date,
+            y: cal,
+          })),
+        };
+        break;
+      default:
+        selectedData = null;
+    }
+
+    const formattedData = selectedData ? [selectedData] : [];
+    return formattedData;
+  };
+
+  const monthlyFlockData = () => {
+    let selectedData;
+
+    switch (category) {
+      case "Active":
+        selectedData = {
+          id: "Active",
+          color: theme.palette.secondary.main,
+          data: monthlyFlocks.map(({ month, total_additional_flocks }) => ({
+            x: month,
+            y: parseInt(total_additional_flocks, 10),
+          })),
+        };
+        break;
+      case "Deceased":
+        selectedData = {
+          id: "Deceased",
+          color: theme.palette.secondary.main,
+          data: monthlyFlocks.map(({ month, total_deceased_flocks }) => ({
+            x: month,
+            y: parseInt(total_deceased_flocks, 10),
+          })),
+        };
+        break;
+      case "Sick":
+        selectedData = {
+          id: "Sick",
+          color: theme.palette.secondary.main,
+          data: monthlyFlocks.map(({ month, total_sick_flocks }) => ({
+            x: month,
+            y: parseInt(total_sick_flocks, 10),
+          })),
+        };
+        break;
+      case "Cal":
+        selectedData = {
+          id: "Cal",
+          color: theme.palette.secondary.main,
+          data: monthlyFlocks.map(({ month, total_cal }) => ({
+            x: month,
+            y: parseInt(total_cal, 10),
+          })),
+        };
+        break;
+      default:
+        selectedData = null;
+    }
+
+    const formattedData = selectedData ? [selectedData] : [];
+    return formattedData;
+  };
+
+  const handleExport = async (filter) => {
+    await auditService.postAudit(
+      `Exported the ${filter} egg report.`,
+      "Download Export",
+      token
+    );
+  };
+
   return (
     <Box m="1.5rem 2.5rem">
       <div className=" flex justify-between items-center">
@@ -116,18 +229,30 @@ const Flocks = () => {
           subtitle="Record of flocks according to their status."
         />
         <div className="flex justify-center gap-2">
-          {/* <Button variant="contained">
-            <CSVLink
-              data={
-                value === 0 ? dailyEgg : value === 1 ? weeklyEgg : monthlyEgg
+          <CSVLink
+            data={
+              value === 0
+                ? dailyFlocks
+                : value === 1
+                ? weeklyFlocks
+                : monthlyFlocks
+            }
+            filename={`flocks_export_${
+              value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+            }.csv`}
+          >
+            <Button
+              variant="contained"
+              sx={{ height: "100%" }}
+              onClick={() =>
+                handleExport(
+                  value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+                )
               }
-              filename={`egg_export_${
-                value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
-              }.csv`}
             >
               Export Data
-            </CSVLink>
-          </Button> */}
+            </Button>
+          </CSVLink>
           <SelectFilter
             category={category}
             setCategory={setCategory}
@@ -138,9 +263,9 @@ const Flocks = () => {
       <Box height="75vh">
         <Box>
           <DateTabs
-            daily={dummyFormData()}
-            weekly={dummyFormData()}
-            monthly={dummyFormData()}
+            daily={dailyFlockData()}
+            weekly={weeklyFlockData()}
+            monthly={monthlyFlockData()}
             value={value}
             setValue={setValue}
           />

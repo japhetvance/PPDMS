@@ -32,8 +32,72 @@ const monthlyEggVisualize = async () => {
   }
 };
 
+//FLOCKS
+const dailyFlocksVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/flocks/visualization`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const weeklyFlocksVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/weekly/flocks/visualization`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const monthlyFlocksVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/monthly/flocks/visualization`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
+//SALES
+const dailySalesVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/daily/sales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const weeklySalesVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/weekly/sales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const monthlySalesVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/monthly/sales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
 export default {
   dailyEggVisualize,
   weeklyEggVisualize,
   monthlyEggVisualize,
+  dailyFlocksVisualize,
+  weeklyFlocksVisualize,
+  monthlyFlocksVisualize,
+  dailySalesVisualize,
+  weeklySalesVisualize,
+  monthlySalesVisualize,
 };
