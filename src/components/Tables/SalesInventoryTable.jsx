@@ -18,7 +18,7 @@ export default function ManageInverntoryTable() {
 
   React.useEffect(() => {
     const fetchUsers = async () => {
-      const result = await axios.get("https://13.211.142.147/api/fetch/egg/inventory");
+      const result = await axios.get("https://13.211.142.147/api/dashboard/transaction");
       setRows(result.data);
     };
     fetchUsers();
@@ -45,10 +45,10 @@ export default function ManageInverntoryTable() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
-    { field: "egg_sm_produced", headerName: "Egg Small", width: 180, editable: true },
-    { field: "egg_md_produced", headerName: "Egg Medium", width: 180, editable: true },
-    { field: "egg_lg_produced", headerName: "Egg Large", width: 180, editable: true },
-    { field: "rejected", headerName: "Rejected Egg", width: 180, editable: true },
+    { field: "buyer_name", headerName: "Buyer Info", width: 180, editable: true },
+    { field: "egg_type", headerName: "Egg Type", width: 180, editable: true },
+    { field: "quantity", headerName: "Quantity", width: 180, editable: true },
+    { field: "price", headerName: "Price", width: 180, editable: true },
     { field: "updatedAt", headerName:"Approved Date", flex:1, renderCell: (params) => {
       const updatedAtString = params.value;
       const updatedAtDate = new Date(updatedAtString);
