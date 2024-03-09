@@ -20,7 +20,7 @@ function FlocksReport() {
   const token = sessionStorage.getItem("token");
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      date: null,
+      date: dayjs().format("YYYY-MM-DD"),
       additional_flocks: null,
       deceased_flocks: null,
       sick_flocks: null,
@@ -81,7 +81,7 @@ function FlocksReport() {
                     {...field}
                     label="Date"
                     slotProps={{ textField: { fullWidth: true } }}
-                    value={field.value}
+                    value={dayjs(field.value)}
                     inputRef={field.ref}
                     onChange={(date) => {
                       field.onChange(dayjs(date).format("YYYY-MM-DD"));
