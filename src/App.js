@@ -13,6 +13,8 @@ import { themeSettings } from "theme";
 import "./App.css";
 
 import Login from "scenes/login";
+import ForgotPassword from "scenes/login/ForgotPassword";
+import ResetPassword from "scenes/login/ResetPassword";
 import ProtectedRoute from "ProtectedRoute";
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Routes>
             <Route path="/*" element={<ProtectedRoute />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot/password" element={<ForgotPassword />} />
+            <Route path="/reset/password" element={<ResetPassword />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -29,37 +29,46 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 
 //api
-import auth from "../../services/auth.service";
-import auditService from "services/audit.service";
+import authService from "services/auth.service";
 
-export default function Login() {
+export default function ResetPassword() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { token } = location.state;
   const [showPassword, setShowPassword] = useState(false);
-
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      username: "",
-      password: "",
+      email: "",
     },
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {
-    const username = data.username;
-    const password = data.password;
+  useEffect(() => {
+    console.log("passed token: ", token);
+  }, []);
 
-    const result = await auth.login(username, password);
-    if (result && result.token) {
-      auditService.postAudit(
-        "Login to website",
-        "Authentication",
-        result.token
-      );
-      sessionStorage.setItem("token", result.token);
-      window.location = "/";
+  const onSubmit = async (data) => {
+    const password = data.password;
+    const confirmPassword = data.confirmPassword;
+
+    if (password === confirmPassword) {
+      try {
+        const result = await authService.resetPassword(password, token);
+        if (result) {
+          console.log("result: ", result);
+          toast.success("Password successfully changed");
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } else {
+          toast.error("There was an error.");
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
     } else {
-      toast.error("Invalid Credentials.");
+      toast.error("Passwords doesn't match");
     }
   };
 
@@ -67,11 +76,6 @@ export default function Login() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
-  };
-
-  const handleForgotPassword = async () => {
-    // console.log("forgot password");
-    navigate("/forgot/password");
   };
 
   return (
@@ -97,34 +101,22 @@ export default function Login() {
             borderRadius: "10px",
             // border: "2px solid red",
             width: 400,
+            gap: 3,
           }}
         >
-          <Typography
-            variant="h2"
-            sx={{ color: theme.palette.secondary[200] }}
-            fontWeight="bold"
-          >
-            CUEJILO FARMS
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{ marginBottom: "1.4em", color: theme.palette.secondary[500] }}
-            fontWeight="bold"
-          >
-            Poultry Monitoring System
-          </Typography>
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-2 justify-center items-center w-full">
             <Typography
-              component="h1"
-              variant="h5"
-              sx={{
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: "600",
-                fontSize: "1.2rem",
-              }}
+              variant="h2"
+              sx={{ color: theme.palette.secondary[200] }}
+              fontWeight="bold"
             >
-              LOG IN
+              Reset Password
             </Typography>
+            <p className="text-xs text-center">
+              Enter a new password to continue and log in to your account.
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 w-full">
             <Box
               component="form"
               onSubmit={handleSubmit(onSubmit)}
@@ -133,39 +125,6 @@ export default function Login() {
             >
               <div className="flex flex-col">
                 <div className="flex flex-col gap-5 justify-between items-center w-full">
-                  <Controller
-                    name="username"
-                    control={control}
-                    defaultValue=""
-                    rules={{
-                      required: {
-                        value: true,
-                        message: "username is required",
-                      },
-                    }}
-                    render={({ field, fieldState: { error } }) => (
-                      <TextField
-                        {...field}
-                        label="Username"
-                        variant="outlined"
-                        fullWidth
-                        inputProps={{
-                          style: {
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "0.8rem",
-                          },
-                        }}
-                        InputLabelProps={{
-                          style: {
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "0.9rem",
-                          },
-                        }}
-                        error={error !== undefined}
-                        helperText={error ? error.message : ""}
-                      />
-                    )}
-                  />
                   <Controller
                     name="password"
                     control={control}
@@ -179,7 +138,7 @@ export default function Login() {
                     }}
                     render={({ field, fieldState: { error } }) => (
                       <FormControl variant="outlined" fullWidth>
-                        <InputLabel htmlFor="password">Password</InputLabel>
+                        <InputLabel htmlFor="password">New Password</InputLabel>
                         <OutlinedInput
                           id="password"
                           {...field}
@@ -200,7 +159,50 @@ export default function Login() {
                               </IconButton>
                             </InputAdornment>
                           }
-                          label="Password"
+                          label="New Password"
+                          error={error !== undefined}
+                          helperText={error ? error.message : ""}
+                        />
+                      </FormControl>
+                    )}
+                  />
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    defaultValue=""
+                    rules={{
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters long",
+                      },
+                    }}
+                    render={({ field, fieldState: { error } }) => (
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel htmlFor="password">
+                          Confirm New Password
+                        </InputLabel>
+                        <OutlinedInput
+                          id="confirmPassword"
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {showPassword ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          label="Confirm New Password"
                           error={error !== undefined}
                           helperText={error ? error.message : ""}
                         />
@@ -208,12 +210,6 @@ export default function Login() {
                     )}
                   />
                 </div>
-                <p
-                  className="text-xs font-[Poppins] self-end my-1 underline cursor-pointer"
-                  onClick={handleForgotPassword}
-                >
-                  Forgot password ?
-                </p>
               </div>
 
               <Button
@@ -229,7 +225,7 @@ export default function Login() {
                   ":hover": { bgcolor: theme.palette.secondary[100] },
                 }}
               >
-                LOG IN
+                Finish
               </Button>
             </Box>
           </div>
