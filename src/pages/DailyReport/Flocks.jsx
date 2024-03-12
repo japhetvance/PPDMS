@@ -86,6 +86,7 @@ function FlocksReport() {
                     onChange={(date) => {
                       field.onChange(dayjs(date).format("YYYY-MM-DD"));
                     }}
+                    maxDate={dayjs()}
                   />
                 </DemoContainer>
               </LocalizationProvider>
