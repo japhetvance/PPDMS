@@ -21,28 +21,40 @@ const Sales = () => {
   const [monthlySales, setMonthlySales] = useState([]);
   const [value, setValue] = React.useState(0);
 
+  //SIZE
   const [category, setCategory] = React.useState("Small");
   const selectOptions = ["Small", "Medium", "Large"];
 
+  //CATEGORY
+  const [category2, setCategory2] = React.useState("Quantity");
+  const selectOptions2 = ["Quantity", "Price"];
+
   useEffect(() => {
-    const fetchDailySales = async () => {
-      const result = await visualizeService.dailySalesVisualize();
-      setDailySales(result);
+    const fetchDailySalesQuantity = async () => {
+      const resultQuantity =
+        await visualizeService.dailySalesQuantityVisualize();
+      const resultPrice = await visualizeService.dailySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setDailySales(resultQuantity);
+      } else {
+        setDailySales(resultPrice);
+      }
     };
-    const fetchWeeklySales = async () => {
-      const result = await visualizeService.weeklySalesVisualize();
+    const fetchWeeklySalesQuantity = async () => {
+      const result = await visualizeService.weeklySalesQuantityVisualize();
       setWeeklySales(result);
     };
-    const fetchMonthlySales = async () => {
-      const result = await visualizeService.monthlySalesVisualize();
+    const fetchMonthlySalesQuantity = async () => {
+      const result = await visualizeService.monthlySalesQuantityVisualize();
       console.log(result);
       setMonthlySales(result);
     };
 
-    fetchDailySales();
-    fetchWeeklySales();
-    fetchMonthlySales();
-  }, []);
+    fetchDailySalesQuantity();
+    fetchWeeklySalesQuantity();
+    fetchMonthlySalesQuantity();
+  }, [category2]);
 
   const dailySaleData = () => {
     let selectedData;
@@ -214,6 +226,11 @@ const Sales = () => {
             category={category}
             setCategory={setCategory}
             selectOptions={selectOptions}
+          />
+          <SelectFilter
+            category={category2}
+            setCategory={setCategory2}
+            selectOptions={selectOptions2}
           />
         </div>
       </div>

@@ -62,7 +62,9 @@ const monthlyFlocksVisualize = async () => {
 };
 
 //SALES
-const dailySalesVisualize = async () => {
+
+//QUANTITY
+const dailySalesQuantityVisualize = async () => {
   try {
     const response = await axios.get(`${baseUrl}/daily/sales/visual`);
     return response.data;
@@ -71,7 +73,7 @@ const dailySalesVisualize = async () => {
     throw error;
   }
 };
-const weeklySalesVisualize = async () => {
+const weeklySalesQuantityVisualize = async () => {
   try {
     const response = await axios.get(`${baseUrl}/weekly/sales/visual`);
     return response.data;
@@ -80,9 +82,20 @@ const weeklySalesVisualize = async () => {
     throw error;
   }
 };
-const monthlySalesVisualize = async () => {
+const monthlySalesQuantityVisualize = async () => {
   try {
     const response = await axios.get(`${baseUrl}/monthly/sales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
+// PRICE
+const dailySalesPriceVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/daily/pricesales/visual`);
     return response.data;
   } catch (error) {
     console.error("Fetching failed:", error.message);
@@ -97,7 +110,8 @@ export default {
   dailyFlocksVisualize,
   weeklyFlocksVisualize,
   monthlyFlocksVisualize,
-  dailySalesVisualize,
-  weeklySalesVisualize,
-  monthlySalesVisualize,
+  dailySalesQuantityVisualize,
+  weeklySalesQuantityVisualize,
+  monthlySalesQuantityVisualize,
+  dailySalesPriceVisualize,
 };
