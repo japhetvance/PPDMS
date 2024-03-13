@@ -8,7 +8,6 @@ const ReactJsBarChart = ({ data }) => {
       { name: "Produced", data: data.produced },
       { name: "Sold", data: data.sold },
       { name: "Rejected", data: data.rejected },
-      { name: "Active", data: data.active },
     ],
     options: {
       chart: {
@@ -29,20 +28,7 @@ const ReactJsBarChart = ({ data }) => {
       },
 
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
+        categories: data.date,
         labels: {
           formatter: function (val) {
             return val;

@@ -62,7 +62,6 @@ const monthlyFlocksVisualize = async () => {
 };
 
 //SALES
-
 //QUANTITY
 const dailySalesQuantityVisualize = async () => {
   try {
@@ -103,6 +102,35 @@ const dailySalesPriceVisualize = async () => {
   }
 };
 
+// COMPARISON
+const dailyComparisonVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/daily/comparison`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const weeklyComparisonVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/weekly/comparison`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const monthlyComparisonVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/monthly/comparison`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+
 export default {
   dailyEggVisualize,
   weeklyEggVisualize,
@@ -114,4 +142,7 @@ export default {
   weeklySalesQuantityVisualize,
   monthlySalesQuantityVisualize,
   dailySalesPriceVisualize,
+  dailyComparisonVisualize,
+  weeklyComparisonVisualize,
+  monthlyComparisonVisualize,
 };

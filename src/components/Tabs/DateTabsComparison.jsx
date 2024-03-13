@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function DateTabsComparison({ data }) {
+export default function DateTabsComparison({ daily, weekly, monthly }) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -70,17 +70,17 @@ export default function DateTabsComparison({ data }) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className=" h-[30rem]">
-          <ReactJsBarChart data={data} />
+          <ReactJsBarChart data={daily} />
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className=" h-[30rem]">
-          <ReactJsBarChart data={data} />
+          <ReactJsBarChart data={weekly} />
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <div className=" h-[30rem]">
-          <ReactJsBarChart data={data} />
+          <ReactJsBarChart data={monthly} />
         </div>
       </CustomTabPanel>
     </Box>
