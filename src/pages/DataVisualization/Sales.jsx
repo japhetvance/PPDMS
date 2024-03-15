@@ -42,13 +42,26 @@ const Sales = () => {
       }
     };
     const fetchWeeklySalesQuantity = async () => {
-      const result = await visualizeService.weeklySalesQuantityVisualize();
-      setWeeklySales(result);
+      const resultQuantity =
+        await visualizeService.weeklySalesQuantityVisualize();
+      const resultPrice = await visualizeService.weeklySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setWeeklySales(resultQuantity);
+      } else {
+        setWeeklySales(resultPrice);
+      }
     };
     const fetchMonthlySalesQuantity = async () => {
-      const result = await visualizeService.monthlySalesQuantityVisualize();
-      console.log(result);
-      setMonthlySales(result);
+      const resultQuantity =
+        await visualizeService.monthlySalesQuantityVisualize();
+      const resultPrice = await visualizeService.monthlySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setMonthlySales(resultQuantity);
+      } else {
+        setMonthlySales(resultPrice);
+      }
     };
 
     fetchDailySalesQuantity();

@@ -101,6 +101,24 @@ const dailySalesPriceVisualize = async () => {
     throw error;
   }
 };
+const weeklySalesPriceVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/weekly/pricesales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
+const monthlySalesPriceVisualize = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/monthly/pricesales/visual`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching failed:", error.message);
+    throw error;
+  }
+};
 
 // COMPARISON
 const dailyComparisonVisualize = async () => {
@@ -142,6 +160,8 @@ export default {
   weeklySalesQuantityVisualize,
   monthlySalesQuantityVisualize,
   dailySalesPriceVisualize,
+  weeklySalesPriceVisualize,
+  monthlySalesPriceVisualize,
   dailyComparisonVisualize,
   weeklyComparisonVisualize,
   monthlyComparisonVisualize,
