@@ -22,6 +22,7 @@ import {
 
 //API
 import usersService from "services/users.service";
+import AddUserModal from "components/AddUserModal";
 
 const roles = ["Market", "Finance", "Development"];
 const randomRole = () => {
@@ -69,20 +70,24 @@ const initialRows = [
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-    }));
-  };
+  // const handleClick = () => {
+  //   const id = randomId();
+  //   setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+  //   setRowModesModel((oldModel) => ({
+  //     ...oldModel,
+  //     [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
+  //   }));
+  // };
+  // const handleClick = async () => {
+  //   console.log("register user");
+  // };
 
   return (
     <GridToolbarContainer>
-      <Button color="secondary" startIcon={<AddIcon />} onClick={handleClick}>
+      {/* <Button color="secondary" startIcon={<AddIcon />} onClick={handleClick}>
         Add record
-      </Button>
+      </Button> */}
+      <AddUserModal />
     </GridToolbarContainer>
   );
 }
@@ -148,21 +153,24 @@ export default function ManageUsersTable() {
 
     { field: "role", headerName: "Role", width: 180, editable: true },
     {
-      field: "createdAt", headerName: "CreatedAt", flex: 1, renderCell: (params) => {
+      field: "createdAt",
+      headerName: "CreatedAt",
+      flex: 1,
+      renderCell: (params) => {
         const updatedAtString = params.value;
         const updatedAtDate = new Date(updatedAtString);
         updatedAtDate.setHours(updatedAtDate.getHours());
 
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric'
+        const formattedDate = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
         }).format(updatedAtDate);
 
         return <div>{formattedDate}</div>;
-      }
+      },
     },
     {
       field: "actions",
