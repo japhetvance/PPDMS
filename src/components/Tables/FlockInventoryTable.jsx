@@ -11,14 +11,22 @@ import {
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 
+//API
+import auditService from "services/audit.service";
+
+//export
+import { CSVLink, CSVDownload } from "react-csv";
 
 export default function ManageInverntoryTable() {
+  const token = sessionStorage.getItem("token");
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
   React.useEffect(() => {
     const fetchUsers = async () => {
-      const result = await axios.get("https://13.211.142.147/api/flocks/rep/approved");
+      const result = await axios.get(
+        "https://13.211.142.147/api/flocks/rep/approved"
+      );
       setRows(result.data);
     };
     fetchUsers();
@@ -29,9 +37,6 @@ export default function ManageInverntoryTable() {
       event.defaultMuiPrevented = true;
     }
   };
-
-
-
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -45,29 +50,61 @@ export default function ManageInverntoryTable() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
-    { field: "additional_flocks", headerName: "Additional Flocks", width: 100, editable: true },
-    { field: "deceased_flocks", headerName: "Deceased Flocks", width: 100, editable: true },
-    { field: "sick_flocks", headerName: "Sick Flocks", width: 100, editable: true },
+    {
+      field: "additional_flocks",
+      headerName: "Additional",
+      width: 100,
+      editable: true,
+    },
+    {
+      field: "deceased_flocks",
+      headerName: "Deceased",
+      width: 100,
+      editable: true,
+    },
+    { field: "sick_flocks", headerName: "Sick", width: 100, editable: true },
     { field: "cal", headerName: "Cal", width: 100, editable: true },
-    { field: "flocks_number_before", headerName: "Flocks No. Before", width: 180, editable: true },
-    { field: "flocks_number_after", headerName: "Flocks No. After", width: 180, editable: true },
-    { field: "updatedAt", headerName:"Approved Date", flex:1, renderCell: (params) => {
-      const updatedAtString = params.value;
-      const updatedAtDate = new Date(updatedAtString);
-      updatedAtDate.setHours(updatedAtDate.getHours()); 
+    {
+      field: "flocks_number_before",
+      headerName: "Flocks No. Before",
+      width: 180,
+      editable: true,
+    },
+    {
+      field: "flocks_number_after",
+      headerName: "Flocks No. After",
+      width: 180,
+      editable: true,
+    },
+    {
+      field: "updatedAt",
+      headerName: "Approved Date",
+      flex: 1,
+      renderCell: (params) => {
+        const updatedAtString = params.value;
+        const updatedAtDate = new Date(updatedAtString);
+        updatedAtDate.setHours(updatedAtDate.getHours());
 
-      const formattedDate = new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-      }).format(updatedAtDate);
+        const formattedDate = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        }).format(updatedAtDate);
 
-      return <div>{formattedDate}</div>;
-    }
-  }
+        return <div>{formattedDate}</div>;
+      },
+    },
   ];
+
+  const handleExport = async () => {
+    await auditService.postAudit(
+      `Exported the flocks inventory.`,
+      "Download Export",
+      token
+    );
+  };
 
   return (
     <Box
@@ -82,6 +119,15 @@ export default function ManageInverntoryTable() {
         },
       }}
     >
+      <CSVLink data={rows} filename="Flocks_Inventory.csv">
+        <Button
+          variant="contained"
+          sx={{ m: "10px", position: "absolute", top: 0, right: 0 }}
+          onClick={() => handleExport()}
+        >
+          Export Data
+        </Button>
+      </CSVLink>
       <DataGrid
         rows={rows}
         columns={columns}

@@ -6,13 +6,16 @@ import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
 import { Button } from "@mui/material";
 
+//API
 import visualizeService from "services/visualize.service";
 import dashboardService from "services/dashboard.service";
+import auditService from "services/audit.service";
 
 //export
 import { CSVLink, CSVDownload } from "react-csv";
 
 const Eggs = () => {
+  const token = sessionStorage.getItem("token");
   const theme = useTheme();
   const [dailyEgg, setDailyEgg] = useState([]);
   const [weeklyEgg, setWeeklyEgg] = useState([]);
@@ -127,6 +130,14 @@ const Eggs = () => {
     return formattedData;
   };
 
+  const handleExport = async (filter) => {
+    await auditService.postAudit(
+      `Exported the ${filter} egg report.`,
+      "Download Export",
+      token
+    );
+  };
+
   return (
     <Box m="1.5rem 2.5rem">
       <div className=" flex justify-between items-center">
@@ -136,18 +147,24 @@ const Eggs = () => {
         />
 
         <div className="flex justify-center gap-2">
-          <Button variant="contained">
-            <CSVLink
-              data={
-                value === 0 ? dailyEgg : value === 1 ? weeklyEgg : monthlyEgg
+          <CSVLink
+            data={value === 0 ? dailyEgg : value === 1 ? weeklyEgg : monthlyEgg}
+            filename={`egg_export_${
+              value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+            }.csv`}
+          >
+            <Button
+              variant="contained"
+              sx={{ height: "100%" }}
+              onClick={() =>
+                handleExport(
+                  value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+                )
               }
-              filename={`egg_export_${
-                value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
-              }.csv`}
             >
               Export Data
-            </CSVLink>
-          </Button>
+            </Button>
+          </CSVLink>
           <SelectFilter
             category={category}
             setCategory={setCategory}

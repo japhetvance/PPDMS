@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,58 +6,201 @@ import DateTabs from "components/Tabs/DateTabs";
 import SelectFilter from "components/SelectFilter";
 import { Button } from "@mui/material";
 
+//API
+import visualizeService from "services/visualize.service";
+import auditService from "services/audit.service";
+
 //export
 import { CSVLink, CSVDownload } from "react-csv";
 
 const Sales = () => {
+  const token = sessionStorage.getItem("token");
   const theme = useTheme();
+  const [dailySales, setDailySales] = useState([]);
+  const [weeklySales, setWeeklySales] = useState([]);
+  const [monthlySales, setMonthlySales] = useState([]);
   const [value, setValue] = React.useState(0);
 
-  const [category, setCategory] = React.useState("Sales");
-  const selectOptions = ["Sales", "Profit"];
+  //SIZE
+  const [category, setCategory] = React.useState("Small");
+  const selectOptions = ["Small", "Medium", "Large"];
 
-  const dummyFormData = () => {
-    const Sales = {
-      id: "Sales",
-      color: theme.palette.secondary.main,
-      data: [
-        { x: "Jan", y: 2100 },
-        { x: "Feb", y: 2070 },
-        { x: "Mar", y: 2040 },
-        { x: "Apr", y: 2080 },
-        { x: "May", y: 2020 },
-        { x: "Jun", y: 2040 },
-        { x: "Jul", y: 2020 },
-        { x: "Aug", y: 2090 },
-        { x: "Sep", y: 2040 },
-        { x: "Oct", y: 2020 },
-        { x: "Nov", y: 2010 },
-        { x: "Dec", y: 2070 },
-      ],
-    };
-    const Profit = {
-      id: "Profit",
-      color: theme.palette.secondary[600],
-      data: [
-        { x: "Jan", y: 21000 },
-        { x: "Feb", y: 20000 },
-        { x: "Mar", y: 20000 },
-        { x: "Apr", y: 28000 },
-        { x: "May", y: 20000 },
-        { x: "Jun", y: 24000 },
-        { x: "Jul", y: 22000 },
-        { x: "Aug", y: 29000 },
-        { x: "Sep", y: 24000 },
-        { x: "Oct", y: 22000 },
-        { x: "Nov", y: 21000 },
-        { x: "Dec", y: 27000 },
-      ],
-    };
-    // Use category state to select the appropriate data
-    const selectedData = category === "Sales" ? Sales : Profit;
+  //CATEGORY
+  const [category2, setCategory2] = React.useState("Quantity");
+  const selectOptions2 = ["Quantity", "Price"];
 
-    const formattedData = [selectedData];
+  useEffect(() => {
+    const fetchDailySalesQuantity = async () => {
+      const resultQuantity =
+        await visualizeService.dailySalesQuantityVisualize();
+      const resultPrice = await visualizeService.dailySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setDailySales(resultQuantity);
+      } else {
+        setDailySales(resultPrice);
+      }
+    };
+    const fetchWeeklySalesQuantity = async () => {
+      const resultQuantity =
+        await visualizeService.weeklySalesQuantityVisualize();
+      const resultPrice = await visualizeService.weeklySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setWeeklySales(resultQuantity);
+      } else {
+        setWeeklySales(resultPrice);
+      }
+    };
+    const fetchMonthlySalesQuantity = async () => {
+      const resultQuantity =
+        await visualizeService.monthlySalesQuantityVisualize();
+      const resultPrice = await visualizeService.monthlySalesPriceVisualize();
+
+      if (category2 === "Quantity") {
+        setMonthlySales(resultQuantity);
+      } else {
+        setMonthlySales(resultPrice);
+      }
+    };
+
+    fetchDailySalesQuantity();
+    fetchWeeklySalesQuantity();
+    fetchMonthlySalesQuantity();
+  }, [category2]);
+
+  const dailySaleData = () => {
+    let selectedData;
+
+    switch (category) {
+      case "Small":
+        selectedData = {
+          id: "Small",
+          color: theme.palette.secondary.main,
+          data: dailySales.slice(-7).map(({ date, egg_sm }) => ({
+            x: date,
+            y: egg_sm,
+          })),
+        };
+        break;
+      case "Medium":
+        selectedData = {
+          id: "Medium",
+          color: theme.palette.secondary.main,
+          data: dailySales.slice(-7).map(({ date, egg_md }) => ({
+            x: date,
+            y: egg_md,
+          })),
+        };
+        break;
+      case "Large":
+        selectedData = {
+          id: "Large",
+          color: theme.palette.secondary.main,
+          data: dailySales.slice(-7).map(({ date, egg_lg }) => ({
+            x: date,
+            y: egg_lg,
+          })),
+        };
+        break;
+      default:
+        selectedData = null;
+    }
+
+    const formattedData = selectedData ? [selectedData] : [];
     return formattedData;
+  };
+
+  const weeklySaleData = () => {
+    let selectedData;
+
+    switch (category) {
+      case "Small":
+        selectedData = {
+          id: "Small",
+          color: theme.palette.secondary.main,
+          data: weeklySales.slice(-7).map(({ week_start, egg_sm }) => ({
+            x: week_start,
+            y: egg_sm,
+          })),
+        };
+        break;
+      case "Medium":
+        selectedData = {
+          id: "Medium",
+          color: theme.palette.secondary.main,
+          data: weeklySales.slice(-7).map(({ week_start, egg_md }) => ({
+            x: week_start,
+            y: egg_md,
+          })),
+        };
+        break;
+      case "Large":
+        selectedData = {
+          id: "Large",
+          color: theme.palette.secondary.main,
+          data: weeklySales.slice(-7).map(({ week_start, egg_lg }) => ({
+            x: week_start,
+            y: egg_lg,
+          })),
+        };
+        break;
+      default:
+        selectedData = null;
+    }
+
+    const formattedData = selectedData ? [selectedData] : [];
+    return formattedData;
+  };
+
+  const monthlySaleData = () => {
+    let selectedData;
+
+    switch (category) {
+      case "Small":
+        selectedData = {
+          id: "Small",
+          color: theme.palette.secondary.main,
+          data: monthlySales.slice(-7).map(({ month, egg_sm }) => ({
+            x: month,
+            y: egg_sm,
+          })),
+        };
+        break;
+      case "Medium":
+        selectedData = {
+          id: "Medium",
+          color: theme.palette.secondary.main,
+          data: monthlySales.slice(-7).map(({ month, egg_md }) => ({
+            x: month,
+            y: egg_md,
+          })),
+        };
+        break;
+      case "Large":
+        selectedData = {
+          id: "Large",
+          color: theme.palette.secondary.main,
+          data: monthlySales.slice(-7).map(({ month, egg_lg }) => ({
+            x: month,
+            y: egg_lg,
+          })),
+        };
+        break;
+      default:
+        selectedData = null;
+    }
+
+    const formattedData = selectedData ? [selectedData] : [];
+    return formattedData;
+  };
+
+  const handleExport = async (filter) => {
+    await auditService.postAudit(
+      `Exported the ${filter} egg report.`,
+      "Download Export",
+      token
+    );
   };
 
   return (
@@ -68,31 +211,48 @@ const Sales = () => {
           subtitle="Record of sales and profits for eggs."
         />
         <div className="flex justify-center gap-2">
-          {/* <Button variant="contained">
-            <CSVLink
-              data={
-                value === 0 ? dailyEgg : value === 1 ? weeklyEgg : monthlyEgg
+          <CSVLink
+            data={
+              value === 0
+                ? dailySales
+                : value === 1
+                ? weeklySales
+                : monthlySales
+            }
+            filename={`sales_export_${
+              value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+            }.csv`}
+          >
+            <Button
+              variant="contained"
+              sx={{ height: "100%" }}
+              onClick={() =>
+                handleExport(
+                  value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
+                )
               }
-              filename={`egg_export_${
-                value === 0 ? "daily" : value === 1 ? "weekly" : "monthly"
-              }.csv`}
             >
               Export Data
-            </CSVLink>
-          </Button> */}
+            </Button>
+          </CSVLink>
           <SelectFilter
             category={category}
             setCategory={setCategory}
             selectOptions={selectOptions}
+          />
+          <SelectFilter
+            category={category2}
+            setCategory={setCategory2}
+            selectOptions={selectOptions2}
           />
         </div>
       </div>
       <Box height="75vh">
         <Box>
           <DateTabs
-            daily={dummyFormData()}
-            weekly={dummyFormData()}
-            monthly={dummyFormData()}
+            daily={dailySaleData()}
+            weekly={weeklySaleData()}
+            monthly={monthlySaleData()}
             value={value}
             setValue={setValue}
           />

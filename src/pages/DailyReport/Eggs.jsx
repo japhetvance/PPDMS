@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import { Box } from "@mui/material";
@@ -20,7 +20,7 @@ function EggsReport() {
   const token = sessionStorage.getItem("token");
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      date: null,
+      date: dayjs().format("YYYY-MM-DD"),
       egg_sm_produced: null,
       egg_md_produced: null,
       egg_lg_produced: null,
@@ -32,14 +32,11 @@ function EggsReport() {
     try {
       const result = await dailyService.eggReport(data, token);
       toast.success("Successfully Added.");
-
       auditService.postAudit("Made a report on eggs.", "Daily Report", token);
-
       setTimeout(() => {
         window.location.reload();
       }, 1500);
-
-      // console.log(result);
+      console.log(result);
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
@@ -81,11 +78,12 @@ function EggsReport() {
                     {...field}
                     label="Date"
                     slotProps={{ textField: { fullWidth: true } }}
-                    value={field.value}
+                    value={dayjs(field.value)}
                     inputRef={field.ref}
                     onChange={(date) => {
                       field.onChange(dayjs(date).format("YYYY-MM-DD"));
                     }}
+                    maxDate={dayjs()}
                   />
                 </DemoContainer>
               </LocalizationProvider>

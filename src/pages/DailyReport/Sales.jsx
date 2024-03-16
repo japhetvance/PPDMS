@@ -26,7 +26,7 @@ function SalesReport() {
 
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
-      date: null,
+      date: dayjs().format("YYYY-MM-DD"),
       buyer_name: null,
       egg_type: null,
       quantity: null,
@@ -86,11 +86,12 @@ function SalesReport() {
                     {...field}
                     label="Date"
                     slotProps={{ textField: { fullWidth: true } }}
-                    value={field.value}
+                    value={dayjs(field.value)}
                     inputRef={field.ref}
                     onChange={(date) => {
                       field.onChange(dayjs(date).format("YYYY-MM-DD"));
                     }}
+                    maxDate={dayjs()}
                   />
                 </DemoContainer>
               </LocalizationProvider>

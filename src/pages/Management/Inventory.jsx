@@ -64,7 +64,7 @@ function Inventory() {
             />
           ))}
         </div>
-        <div className="w-[99%]">
+        <div className="w-[99%] relative">
           <Tabs value={tabIndex} onChange={handleTabChange}>
             <Tab label="Egg Inventory" />
             <Tab label="Sales Inventory" />

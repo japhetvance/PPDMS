@@ -43,7 +43,34 @@ const register = async (formData, token) => {
   }
 };
 
+const forgotPassword = async (email) => {
+  const body = {
+    email,
+  };
+  try {
+    const response = await axios.post(`${baseUrl}/forgot/password`, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const resetPassword = async (newPassword, token) => {
+  const body = {
+    newPassword,
+    token,
+  };
+  try {
+    const response = await axios.post(`${baseUrl}/reset/password`, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
+  forgotPassword,
+  resetPassword,
 };

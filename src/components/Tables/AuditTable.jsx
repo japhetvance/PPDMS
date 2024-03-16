@@ -11,7 +11,8 @@ export default function AuditTable() {
   React.useEffect(() => {
     const fetchAudit = async () => {
       const result = await auditService.fetchAudit();
-      setAuditData(result);
+      const reversedResult = result.reverse();
+      setAuditData(reversedResult);
       console.log("AuditData: ", result);
     };
     fetchAudit();
