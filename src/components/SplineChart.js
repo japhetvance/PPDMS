@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import ReactApexChart from "react-apexcharts";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Chart from 'react-apexcharts';
 
-function ProductionForecastChart() {
-  const [forecastData, setForecastData] = useState({});
+const BarChart = () => {
+  const [forecastData, setForecastData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://13.211.142.147/api/production/forecastings"
-        );
-        console.log("response: ", response.data);
+        const response = await axios.get("http://localhost:9000/api/production/forecastings");
         setForecastData(response.data);
         setLoading(false);
       } catch (error) {
@@ -29,78 +26,102 @@ function ProductionForecastChart() {
   if (error) return <p>Error: {error.message}</p>;
   if (!forecastData) return <p>No data available</p>;
 
-  // Prepare series data
-  const series = Object.keys(forecastData).map((eggType) => {
-    let data = forecastData[eggType];
-    if (Array.isArray(data)) {
-      // If data is an array, append the predicted value to it
-      data = [...data, forecastData[`${eggType}_predicted`]];
-    } else {
-      // If data is a single value, create an array with just the predicted value
-      data = [forecastData[`${eggType}_predicted`]];
-    }
-    return {
-      name: eggType,
-      data: data,
-    };
-  });
-
-  const categories = Array.from(
-    { length: series[0].data.length },
-    (_, i) => "Week" + (i + 1)
+  // Prepare data for the chart
+  const categories = Array.from({ length: forecastData.egg_sm.length }, (_, i) =>
+    i === forecastData.egg_sm.length - 1 ? "Predicted Value" : `Week ${i + 1}`
   );
+  const series = [
+    {
+      name: 'Small Eggs',
+      data: forecastData.egg_sm
+    },
+    {
+      name: 'Medium Eggs',
+      data: forecastData.egg_md
+    },
+    {
+      name: 'Large Eggs',
+      data: forecastData.egg_lg
+    }
+  ];
 
-  const options = {
+  // Get the predicted values
+  const predictedValues = series.map(series => series.data[series.data.length - 1]);
+
+  const chartOptions = {
     chart: {
+      type: 'bar',
       height: 350,
-      type: "bar",
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'
+      },
+    },
+    dataLabels: {
+      enabled: true
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['white']
     },
     xaxis: {
       categories: categories,
+      dataLabels:{
+        style:{
+          color: '#ffffff' 
+        }
+      },
+      title: {
+        text: 'Weeks',
+        style: {
+          color: '#ffffff' 
+        }
+      },
       labels: {
         style: {
-          colors: "#ffffff",
-        },
-      },
+          colors: '#ffffff' // Set the color of x-axis labels to white
+        }
+      }
     },
     yaxis: {
-      labels: {
-        style: {
-          colors: "#ffffff",
-        },
-      },
-    },
-    title: {
-      text: "Production Forecast",
-      align: "center",
-      style: {
-        fontSize: "20px",
-        fontWeight: "bold",
-        fontFamily: "Poppins",
-        color: "white",
-      },
-    },
-    tooltip: {
-      enabled: false,
+      title: {
+        text: 'Number of Eggs'
+      }
     },
     legend: {
-      position: "top",
-      labels: {
-        colors: "white",
-      },
+      position: 'top'
     },
+    fill: {
+      opacity: 1
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val;
+        }
+      }
+    }
+  };
+
+  // Customize the tooltip to display the predicted value
+  chartOptions.tooltip.custom = function({seriesIndex, dataPointIndex, w}) {
+    const data = w.config.series[seriesIndex].data;
+    if (dataPointIndex === data.length - 1) {
+      return `<div class="tooltip">Predicted Value (${dataPointIndex}): ${data[dataPointIndex]}</div>`;
+    } else {
+      return `<div class="tooltip">${w.config.series[seriesIndex].name} (${dataPointIndex}): ${data[dataPointIndex]}</div>`;
+    }
   };
 
   return (
     <div>
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="bar"
-        height={550}
-      />
+      <Chart options={chartOptions} series={series} type="bar" height={500} />
     </div>
   );
-}
+};
 
-export default ProductionForecastChart;
+export default BarChart;
